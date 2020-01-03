@@ -1,15 +1,11 @@
-Python Runnung Wake-on-LAN
-========
+# Python Runnung Wake-on-LAN
 
-What is this?
--------------
+**What is this?**<br>
 Using Python sending Magic Packet to runnung Wake-on-LAN function
 
-Requirements
-------------
-wakeonlan_gui.py
+## Requirements
+**wakeonlan_gui.py**<br>
 Python Module "wakeonlan" is required, visit Resources link to install module
 
-Resources
----------
+## Resources
 - wakeonlan Module https://pypi.org/project/wakeonlan/
