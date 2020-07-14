@@ -21,5 +21,8 @@ Module "wakeonlan" not required, **in development**
 **Python Module "wakeonlan"**  
 Visit Resources link to install module
 
+**Python Version**
+Python 3.7.5 64-bit or higher
+
 ## Resources
 - wakeonlan Module https://pypi.org/project/wakeonlan/
