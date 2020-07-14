@@ -19,10 +19,10 @@ def close_window ():
 #Definite_WakeUp_Command
 def wake_up():
     #Get_Mac_address
-    str_mac = f1.get()
+    str_mac = text_mac.get()
     str_mac = str_mac.replace(':','-')
     #Broadcast_Range
-    str_ip = f2.get()
+    str_ip = text_ip.get()
     try:
         send_magic_packet(str_mac, ip_address=str_ip, port=9)
         status = tk.Label(window, text="Magic Packet Sending Success")
@@ -39,15 +39,16 @@ label.grid(row=0, ipadx=5, pady=5)
 
 #Definite_Input_Entry
 #Definite_Mac
-f1 = tk.Entry(window, justify='center')
-f1.grid(row=1, ipadx=5, pady=5)
+text_mac = tk.Entry(window, justify='center')
+text_mac.insert(0, "Mac address")
+text_mac.grid(row=1, ipadx=5, pady=5)
 
 #Definite_Input_Entry
 #Definite_IP_Address
-f2 = tk.Entry(window, justify='center')
+text_ip = tk.Entry(window, justify='center')
 #Default is Broadcast
-f2.insert(0, "255.255.255.255")
-f2.grid(row=2, ipadx=5, pady=5)
+text_ip.insert(0, "255.255.255.255")
+text_ip.grid(row=2, ipadx=5, pady=5)
 
 #Definite_WakeUp_Command
 buttonWake = tk.Button(window, text="Wake", width=20, command=wake_up)
