@@ -27,14 +27,14 @@ def wake_up():
         send_magic_packet(str_mac, ip_address=str_ip, port=9)
         status = tk.Label(window, text="Magic Packet Sending Success")
         status.grid(row=4, ipadx=5, pady=5)
-        #IF_Sending_Success
+        #If_Sending_Success
     except:
         status = tk.Label(window, text="Magic Packet Sending Fail")
         status.grid(row=4, ipadx=5, pady=5)
         #If_Mac_Address_Format_Incorrect
 
-#Definite_Description
-label = tk.Label(window, text='python wakeonlan module required')
+#Definite_Top_Description
+label = tk.Label(window, text='Python wakeonlan module required')
 label.grid(row=0, ipadx=5, pady=5)
 
 #Definite_Input_Entry
@@ -42,7 +42,10 @@ label.grid(row=0, ipadx=5, pady=5)
 f1 = tk.Entry(window, justify='center')
 f1.grid(row=1, ipadx=5, pady=5)
 
+#Definite_Input_Entry
+#Definite_IP_Address
 f2 = tk.Entry(window, justify='center')
+#Default is Broadcast
 f2.insert(0, "255.255.255.255")
 f2.grid(row=2, ipadx=5, pady=5)
 
