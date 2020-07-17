@@ -5,19 +5,19 @@
 import sys
 from wakeonlan import send_magic_packet
 
-#Input_Ethernet_MAC_Address
+#Input Ethernet MAC address
 str_mac = input("Enter Ethernet MAC Address: ")
 
-#Translate_String
+#Translate string
 str_mac = str_mac.replace(':','-')
 
-#Default_is_Broadcast
+#Default is droadcast mode
 str_ip = input(("Enter IP Address ( Default is Broadcast ) : ") or "255.255.255.255")
 
-#Sending_Magic_Packet
+#Sending Magic Packet
 send_magic_packet(str_mac, ip_address=str_ip, port=9)
 
-#Print Success Massage
+#Print success massage
 print("Magic Packet Sending Success")
 
 sys.exit(0)
