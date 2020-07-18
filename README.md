@@ -1,9 +1,8 @@
 # Python Runnung Wake-on-LAN
 
-[![rpi](https://github.takahashi65.info/lib_badge/raspberry-pi.svg)](https://www.raspberrypi.org/) 
 [![wol](https://github.takahashi65.info/lib_badge/wake-on-lan.svg)](https://pypi.org/project/wakeonlan/) 
-[![python](https://github.takahashi65.info/lib_badge/python-made.svg)](https://www.python.org/)
-[![python](https://github.takahashi65.info/lib_badge/python-3.6.svg)](https://www.python.org/)
+[![python](https://github.takahashi65.info/lib_badge/python.svg)](https://www.python.org/)
+[![python version](https://github.takahashi65.info/lib_badge/python-3.6.svg)](https://www.python.org/)
 
 **What is this?**<br>
 Using Python sending Magic Packet to runnung Wake-on-LAN function, has GUI Function
