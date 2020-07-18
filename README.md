@@ -14,10 +14,10 @@ Default IP range is broadcast
 ![ScreenShot](https://github.takahashi65.info/lib_img/github_wol_success.png)
 
 ## File Description
-**wakeonlan_gui.py** / **wakeonlan_cli.py**  
+**wakeonlan_cli.py** / **wakeonlan_gui.py**  
 Python Module "wakeonlan" is required
 
-**wakeonlan_standalone_gui.py** / **wakeonlan_standalone_cli.py** [![UA](https://github.takahashi65.info/lib_badge/under-development.svg)](https://github.com/Suzhou65/Python-Wake-on-LAN)  
+**wakeonlan_standalone_cli.py** / **wakeonlan_standalone_gui.py**  
 Module "wakeonlan" not required, **Under development**
 
 ## Working Environments
