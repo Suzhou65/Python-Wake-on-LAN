@@ -1,5 +1,10 @@
 # Python Runnung Wake-on-LAN
 
+[![rpi](https://github.takahashi65.info/lib_badge/raspberry-pi.svg)](https://www.raspberrypi.org/) 
+[![wol](https://github.takahashi65.info/lib_badge/wake-on-lan.svg)](https://pypi.org/project/wakeonlan/) 
+[![python](https://github.takahashi65.info/lib_badge/python-made.svg)](https://www.python.org/)
+[![python](https://github.takahashi65.info/lib_badge/python-3.6.svg)](https://www.python.org/)
+
 **What is this?**<br>
 Using Python sending Magic Packet to runnung Wake-on-LAN function, has GUI Function
 
@@ -8,21 +13,19 @@ Enter MAC Address
 Default IP range is broadcast
 ![ScreenShot](https://github.takahashi65.info/lib_img/github_wol_success.png)
 
-## Version
-**wakeonlan_gui.py**<br>
-**wakeonlan_cli.py**<br>
+## File Description
+**wakeonlan_gui.py** / **wakeonlan_cli.py**  
 Python Module "wakeonlan" is required
 
-**wakeonlan_standalone_gui.py**<br>
-**wakeonlan_standalone_cli.py**<br>
+**wakeonlan_standalone_gui.py** / **wakeonlan_standalone_cli.py**  
 Module "wakeonlan" not required, **in development**
 
-## Requirements
+## Working Environments
 **Python Module "wakeonlan"**  
 Visit Resources link to install module
 
 **Python Version**
-Python 3.7.5 64-bit or higher
+Python 3.6.8 or higher
 
 ## Resources
-- wakeonlan Module https://pypi.org/project/wakeonlan/
+- [wakeonlan Module](https://pypi.org/project/wakeonlan/)
