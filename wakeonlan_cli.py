@@ -11,7 +11,7 @@ str_mac = input("Enter Ethernet MAC Address: ")
 #Translate string
 str_mac = str_mac.replace(':','-')
 
-#Default is droadcast mode
+#Default is broadcast mode
 str_ip = input(("Enter IP Address ( Default is Broadcast ) : ") or "255.255.255.255")
 
 #Sending Magic Packet

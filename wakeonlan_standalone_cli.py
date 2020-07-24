@@ -1,2 +1,46 @@
 #coding=utf-8
-#Under development
+
+import sys
+import time
+import struct
+import socket
+
+#Default sending port
+str_port = 9
+
+#Input IP Address
+#Default is broadcast mode
+str_ip = input("Enter IP Address: ( default is broadcast mode)") or "255.255.255.255"
+
+#Input Ethernet MAC address
+str_mac = input("Enter MAC Address: ")
+
+#Trans input mac adress
+if len(str_mac) == 17:
+    separate = str_mac[2]
+    str_mac = str_mac.replace(separate, "")
+
+#Print error massage if format incorrect
+elif len(str_mac) != 12:
+    print("MAC Address format incorrect")
+
+#Trans input mac adress into bytes
+macaddress = bytes.fromhex("F" * 12 + str_mac *16)
+
+#Send packet to ip address
+print("Magic Packet Sending")
+soc = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+soc.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST,1)
+soc.sendto(macaddress,(str_ip,str_port))
+
+time.sleep(3)
+soc.sendto(macaddress,(str_ip,str_port))
+
+time.sleep(3)
+soc.sendto(macaddress,(str_ip,str_port))
+
+soc.close()
+#Print success massage
+print("Magic Packet Sending Success")
+
+sys.exit(0)
