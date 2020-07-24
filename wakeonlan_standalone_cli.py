@@ -10,7 +10,7 @@ str_port = 9
 
 #Input IP Address
 #Default is broadcast mode
-str_ip = input("Enter IP Address: ( default is broadcast mode)") or "255.255.255.255"
+str_ip = input(("Enter IP Address ( Default is Broadcast ) : ") or "255.255.255.255")
 
 #Input Ethernet MAC address
 str_mac = input("Enter MAC Address: ")
