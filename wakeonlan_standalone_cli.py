@@ -2,7 +2,6 @@
 
 import sys
 import time
-import struct
 import socket
 
 #Default sending port
@@ -24,21 +23,21 @@ if len(str_mac) == 17:
 elif len(str_mac) != 12:
     print("MAC Address format incorrect")
 
-#Trans input mac adress into bytes
-macaddress = bytes.fromhex("F" * 12 + str_mac *16)
+#Convert input mac adress string into bytes
+bytes_mac = bytes.fromhex("F" * 12 + str_mac *16)
 
 #Send packet to ip address
-print("Magic Packet Sending")
+print("Magic Packet Sending ...")
 soc = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 soc.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST,1)
-soc.sendto(macaddress,(str_ip,str_port))
-
-time.sleep(3)
-soc.sendto(macaddress,(str_ip,str_port))
-
-time.sleep(3)
-soc.sendto(macaddress,(str_ip,str_port))
-
+soc.sendto(bytes_mac,(str_ip,str_port))
+#Wait
+time.sleep(1)
+soc.sendto(bytes_mac,(str_ip,str_port))
+#Wait
+time.sleep(1)
+soc.sendto(bytes_mac,(str_ip,str_port))
+#Close sending procress
 soc.close()
 #Print success massage
 print("Magic Packet Sending Success")
