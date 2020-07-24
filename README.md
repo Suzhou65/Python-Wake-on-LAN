@@ -29,7 +29,7 @@ Standalone version doesn't need to install module
 **Python Version**
 Python 3.6.8 or higher
 
-### How Python convert string into bytes
+## How Python convert string into bytes
 ```python
 str_mac = '1A-1B-4C-5D-1E-4F'
 
@@ -41,9 +41,9 @@ elif len(str_mac) != 12:
         
 hex_mac = bytes.fromhex("F" * 12 + str_mac *16)
 ```
-  
+
 or
-  
+
 ```python
 str_mac = '1A-1B-4C-5D-1E-4F'
 
