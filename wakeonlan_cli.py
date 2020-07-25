@@ -5,11 +5,19 @@
 import sys
 from wakeonlan import send_magic_packet
 
+print("Python wakeonlan module required")
+
 #Input Ethernet MAC address
 str_mac = input("Enter Ethernet MAC Address: ")
 
-#Translate string
-str_mac = str_mac.replace(':','-')
+#Convert string
+if len(str_mac) == 17:
+    separate = str_mac[2]
+    str_mac = str_mac.replace(separate, "")
+
+#Print error massage if format incorrect
+elif len(str_mac) != 12:
+    print("MAC Address format incorrect")
 
 #Default is broadcast mode
 str_ip = input(("Enter IP Address ( Default is Broadcast ) : ") or "255.255.255.255")

@@ -18,20 +18,32 @@ def close_window ():
 
 #definite WakeUp command
 def wake_up():
+    status_lab = tk.StringVar()
+    status = tk.Label(window, textvariable=status_lab)
+    status.grid(row=4, ipadx=5, pady=5)
+
     #Get Mac address
     str_mac = text_mac.get()
+    
+    #Convert string
+    if len(str_mac) == 17:
+        separate = str_mac[2]
+        str_mac = str_mac.replace(separate, "")
+        
+    #Print error massage if format incorrect
+    elif len(str_mac) != 12:
+        status_lab.set("MAC Address format incorrect, sending Fail")
+
     str_mac = str_mac.replace(':','-')
     #Broadcast range
     str_ip = text_ip.get()
     try:
         send_magic_packet(str_mac, ip_address=str_ip, port=9)
-        status = tk.Label(window, text="Magic Packet Sending Success")
-        status.grid(row=4, ipadx=5, pady=5)
+        status_lab.set("        Magic Packet Sending Success        ")
         #If sending success
     except:
-        status = tk.Label(window, text="Magic Packet Sending Fail")
-        status.grid(row=4, ipadx=5, pady=5)
         #If Mac address format or something incorrect
+        status_lab.set("MAC Address format incorrect, sending Fail")
 
 #Definite top description
 label = tk.Label(window, text='Python wakeonlan module required')
