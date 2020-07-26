@@ -12,15 +12,18 @@ window.minsize(300,240)
 window.maxsize(300,240)
 window.grid_columnconfigure(0, weight=1)
 
+#Setting textvariable status
+global status_lab
+status_lab = tk.StringVar()
+status = tk.Label(window, textvariable=status_lab)
+status.grid(row=4, ipadx=5, pady=5)
+
 #Exit button command definite
 def close_window (): 
     window.destroy()
 
 #definite WakeUp command
 def wake_up():
-    status_lab = tk.StringVar()
-    status = tk.Label(window, textvariable=status_lab)
-    status.grid(row=4, ipadx=5, pady=5)
 
     #Get Mac address
     str_mac = text_mac.get()

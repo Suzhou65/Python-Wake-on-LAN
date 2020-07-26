@@ -9,9 +9,15 @@ import tkinter as tk
 #Main windows, tkinter setting
 window = tk.Tk()
 window.title('Wake-on-LAN')
-window.minsize(300,320)
-window.maxsize(300,320)
+window.minsize(300,300)
+window.maxsize(300,300)
 window.grid_columnconfigure(0, weight=1)
+
+#Setting textvariable status
+global input_status
+input_status = tk.StringVar()
+status = tk.Label(window, textvariable=input_status)
+status.grid(row=3, ipadx=5, pady=5)
 
 #Exit button command definite
 def close_window (): 
@@ -26,12 +32,11 @@ def check_mac():
     if len(str_mac) == 17:
         separate = str_mac[2]
         str_mac = str_mac.replace(separate, "")
-        status = tk.Label(window, text="MAC Address check complete")
-        status.grid(row=2, ipadx=5, pady=5)
+        input_status.set(" MAC Address Check Complete ")
+
     #If Mac address format incorrect
     elif len(str_mac) != 12:
-        status = tk.Label(window, text="MAC Address format incorrect")
-        status.grid(row=2, ipadx=5, pady=5)
+        input_status.set("MAC Address Format Incorrect")
     
     #Convert input mac adress string into bytes
     return bytes.fromhex("F" * 12 + str_mac *16)
@@ -51,16 +56,12 @@ def wake_up():
     #Start sending magic packet
     soc.sendto(bytes_mac,(str_ip,str_port))
     #Wait
-    time.sleep(1)
-    soc.sendto(bytes_mac,(str_ip,str_port))
-    #Wait
-    time.sleep(1)
+    time.sleep(2)
     soc.sendto(bytes_mac,(str_ip,str_port))
     #Close sending procress
     soc.close()
     #Show success massage
-    status = tk.Label(window, text="Magic Packet Sending Success")
-    status.grid(row=7, ipadx=5, pady=5)
+    input_status.set("Magic Packet Sending Success")
 
 #Definite top description
 label = tk.Label(window, text='Enter MAC Address')
@@ -72,7 +73,7 @@ text_mac.grid(row=1, ipadx=5, pady=5)
 
 #Definite Check MAC Address command
 buttonWake = tk.Button(window, text="Check MAC Address", width=20, command=check_mac)
-buttonWake.grid(row=3, ipadx=5, pady=5)
+buttonWake.grid(row=2, ipadx=5, pady=5)
 
 #Definite top description
 label = tk.Label(window, text='Enter IP Address ( Default is Broadcast )')
@@ -90,7 +91,7 @@ buttonWake.grid(row=6, ipadx=5, pady=5)
 
 #Definite exit button
 buttonEnd = tk.Button(window, text="Exit", width=20, command=close_window)
-buttonEnd.grid(row=8, ipadx=5, pady=5)
+buttonEnd.grid(row=7, ipadx=5, pady=5)
 
 #Loop
 window.mainloop()
