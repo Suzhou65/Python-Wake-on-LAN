@@ -37,7 +37,6 @@ def wake_up():
     elif len(str_mac) != 12:
         status_lab.set("MAC Address format incorrect, sending Fail")
 
-    str_mac = str_mac.replace(':','-')
     #Broadcast range
     str_ip = text_ip.get()
     try:
