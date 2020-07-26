@@ -15,7 +15,7 @@ Command-line interface support
 ![ScreenShot](https://github.takahashi65.info/lib_img/github_wol_cli.png)
 
 ## Releases Status
-[Python Wake on LAN, v1.0-stable](https://github.com/Suzhou65/Python-Wake-on-LAN/releases/tag/v1.0-stable)
+[Python-WoL v1.1, stable](https://github.com/Suzhou65/Python-Wake-on-LAN/releases/tag/v1.1-stable)
 
 ## File Description
 **wakeonlan_cli.py** / **wakeonlan_gui.py**  
@@ -33,6 +33,7 @@ Standalone version doesn't need to install module
 Python 3.6.8 or higher
 
 ## How Python convert string into bytes
+**Method 1**
 ```python
 str_mac = '1A-1B-4C-5D-1E-4F'
 
@@ -43,10 +44,12 @@ elif len(str_mac) != 12:
     print("MAC Address Input error")
         
 hex_mac = bytes.fromhex("F" * 12 + str_mac *16)
+
+print(type(hex_mac))
+print(hex_mac)
 ```
-
-or
-
+  
+**Method 2**
 ```python
 str_mac = '1A-1B-4C-5D-1E-4F'
 
@@ -65,8 +68,10 @@ def check_mac():
     return bytes.fromhex("F" * 12 + str_mac *16)
 
 bytes_mac = check_mac()
+print(type(bytes_mac))
+print(bytes_mac)
 ```
-
+  
 ## Resources
 - [wakeonlan Module](https://pypi.org/project/wakeonlan/)
 - [Python Wake-on-LAN, code example](https://github.com/remcohaszing/pywakeonlan)
