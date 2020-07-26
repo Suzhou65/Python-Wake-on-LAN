@@ -1,4 +1,4 @@
-# Python Runnung Wake-on-LAN
+# Python Running Wake-on-LAN
 
 [![wol](https://github.takahashi65.info/lib_badge/wake-on-lan.svg)](https://pypi.org/project/wakeonlan/) 
 [![python](https://github.takahashi65.info/lib_badge/python.svg)](https://www.python.org/)
@@ -13,6 +13,9 @@ Using Python sending Magic Packet to runnung Wake-on-LAN function, has GUI
 
 Command-line interface support
 ![ScreenShot](https://github.takahashi65.info/lib_img/github_wol_cli.png)
+
+## Releases Status
+[Python Wake on LAN, v1.0-stable](https://github.com/Suzhou65/Python-Wake-on-LAN/releases/tag/v1.0-stable)
 
 ## File Description
 **wakeonlan_cli.py** / **wakeonlan_gui.py**  
