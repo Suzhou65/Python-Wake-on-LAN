@@ -32,11 +32,11 @@ def check_mac():
     if len(str_mac) == 17:
         separate = str_mac[2]
         str_mac = str_mac.replace(separate, "")
-        input_status.set(" MAC Address Check Complete ")
+        input_status.set("  MAC Address Check Complete  ")
 
     #If Mac address format incorrect
     elif len(str_mac) != 12:
-        input_status.set("MAC Address Format Incorrect")
+        input_status.set(" MAC Address Format Incorrect ")
     
     #Convert input mac adress string into bytes
     return bytes.fromhex("F" * 12 + str_mac *16)
@@ -57,16 +57,19 @@ def wake_up():
         #Start sending magic packet
         soc.sendto(bytes_mac,(str_ip,str_port))
         #Wait
-        time.sleep(2)
+        time.sleep(1)
+        soc.sendto(bytes_mac,(str_ip,str_port))
+        #Wait
+        time.sleep(1)
         soc.sendto(bytes_mac,(str_ip,str_port))
         #Close sending procress
         soc.close()
         #Show success massage
-        input_status.set("Magic Packet Sending Success")
+        input_status.set(" Magic Packet Sending Success ")
 
-    except:
+    except ValueError:
         #If Mac address format or something incorrect
-        input_status.set("  Magic Packet Sending Fail  ")
+        input_status.set("Sending Fail, Something Wrong")
 
 #Definite top description
 label = tk.Label(window, text='Enter MAC Address')

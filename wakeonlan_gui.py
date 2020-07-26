@@ -43,9 +43,9 @@ def wake_up():
         send_magic_packet(str_mac, ip_address=str_ip, port=9)
         status_lab.set("        Magic Packet Sending Success        ")
         #If sending success
-    except:
+    except ValueError:
         #If Mac address format or something incorrect
-        status_lab.set("MAC Address format incorrect, sending Fail")
+        status_lab.set("        Sending Fail, Something Wrong        ")
 
 #Definite top description
 label = tk.Label(window, text='Python wakeonlan module required')
