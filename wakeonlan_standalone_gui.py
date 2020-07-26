@@ -40,7 +40,7 @@ def check_mac():
     
     #Convert input mac adress string into bytes
     return bytes.fromhex("F" * 12 + str_mac *16)
-    
+
 #Definite WakeUp command
 def wake_up():
     #Default sending port
@@ -50,18 +50,23 @@ def wake_up():
     #Get bytes from check_mac
     bytes_mac = check_mac()
 
-    #Setting socket
-    soc = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    soc.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST,1)
-    #Start sending magic packet
-    soc.sendto(bytes_mac,(str_ip,str_port))
-    #Wait
-    time.sleep(2)
-    soc.sendto(bytes_mac,(str_ip,str_port))
-    #Close sending procress
-    soc.close()
-    #Show success massage
-    input_status.set("Magic Packet Sending Success")
+    try:
+        #Setting socket
+        soc = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        soc.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST,1)
+        #Start sending magic packet
+        soc.sendto(bytes_mac,(str_ip,str_port))
+        #Wait
+        time.sleep(2)
+        soc.sendto(bytes_mac,(str_ip,str_port))
+        #Close sending procress
+        soc.close()
+        #Show success massage
+        input_status.set("Magic Packet Sending Success")
+
+    except:
+        #If Mac address format or something incorrect
+        input_status.set("  Magic Packet Sending Fail  ")
 
 #Definite top description
 label = tk.Label(window, text='Enter MAC Address')
@@ -79,9 +84,8 @@ buttonWake.grid(row=2, ipadx=5, pady=5)
 label = tk.Label(window, text='Enter IP Address ( Default is Broadcast )')
 label.grid(row=4, ipadx=5, pady=5)
 
-#Definite IP address input entry
+#Definite IP address input entry, Default is broadcast mode
 text_ip = tk.Entry(window, justify='center')
-#Default is broadcast mode
 text_ip.insert(0, "255.255.255.255")
 text_ip.grid(row=5, ipadx=5, pady=5)
 
