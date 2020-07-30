@@ -27,6 +27,12 @@ def close_window ():
 def check_mac():
     #Get MAC address
     str_mac = text_mac.get()
+    
+    #Default Mac address, if you are such a lazy guy
+    if len(str_mac) == 0:
+        str_mac = "1A-1B-4C-5D-1E-4F"
+    else:
+        pass
 
     #Check input mac adress
     if len(str_mac) == 17:

@@ -12,7 +12,13 @@ str_port = 9
 str_ip = input(("Enter IP Address ( Default is Broadcast ) : ") or "255.255.255.255")
 
 #Input Ethernet MAC address
-str_mac = input("Enter MAC Address: ")
+str_mac = input("Enter MAC Address ( Default address setting in source code ) : ")
+
+#Default Mac address, if you are such a lazy guy
+if len(str_mac) == 0:
+    str_mac = "1A-1B-4C-5D-1E-4F"
+else:
+    pass
 
 #Trans input mac adress
 if len(str_mac) == 17:

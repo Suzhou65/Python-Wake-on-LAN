@@ -8,7 +8,13 @@ from wakeonlan import send_magic_packet
 print("Python wakeonlan module required")
 
 #Input Ethernet MAC address
-str_mac = input("Enter Ethernet MAC Address: ")
+str_mac = input("Enter MAC Address ( Default address setting in source code ) : ")
+
+#Default Mac address, if you are such a lazy guy
+if len(str_mac) == 0:
+    str_mac = "1A-1B-4C-5D-1E-4F" 
+else:
+    pass
 
 #Convert string
 if len(str_mac) == 17:
