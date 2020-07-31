@@ -28,22 +28,23 @@ def check_mac():
     #Get MAC address
     str_mac = text_mac.get()
     
-    #Default Mac address, if you are such a lazy guy
     if len(str_mac) == 0:
-        str_mac = "1A-1B-4C-5D-1E-4F"
-    else:
-        pass
+        #Default Mac address, if you are such a lazy guy
+        def_str_mac = "1A-1B-4C-5D-1E-4F"
+        separate = def_str_mac[2]
+        str_mac = def_str_mac.replace(separate, "")
+        input_status.set("   Input Default Mac Address   ")
 
-    #Check input mac adress
-    if len(str_mac) == 17:
+    elif len(str_mac) == 17:
+        #Check input mac adress
         separate = str_mac[2]
         str_mac = str_mac.replace(separate, "")
         input_status.set("  MAC Address Check Complete  ")
 
-    #If Mac address format incorrect
     elif len(str_mac) != 12:
+        #If Mac address format incorrect
         input_status.set(" MAC Address Format Incorrect ")
-    
+
     #Convert input mac adress string into bytes
     return bytes.fromhex("F" * 12 + str_mac *16)
 

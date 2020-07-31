@@ -10,19 +10,19 @@ print("Python wakeonlan module required")
 #Input Ethernet MAC address
 str_mac = input("Enter MAC Address ( Default address setting in source code ) : ")
 
-#Default Mac address, if you are such a lazy guy
 if len(str_mac) == 0:
-    str_mac = "1A-1B-4C-5D-1E-4F" 
-else:
-    pass
-
-#Convert string
-if len(str_mac) == 17:
+    #Default Mac address, if you are such a lazy guy
+    def_str_mac = "1A-1B-4C-5D-1E-4F"
+    separate = def_str_mac[2]
+    str_mac = def_str_mac.replace(separate, "")
+    
+elif len(str_mac) == 17:
+    #Convert string
     separate = str_mac[2]
     str_mac = str_mac.replace(separate, "")
 
-#Print error massage if format incorrect
 elif len(str_mac) != 12:
+    #Print error massage if format incorrect
     print("MAC Address format incorrect")
 
 #Default is broadcast mode
