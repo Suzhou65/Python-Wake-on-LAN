@@ -12,15 +12,9 @@ str_port = 9
 str_ip = input(("Enter IP Address ( Default is Broadcast ) : ") or "255.255.255.255")
 
 #Input Ethernet MAC address
-str_mac = input("Enter MAC Address ( Default address setting in source code ) : ")
+str_mac = input("Enter MAC Address: ")
 
-if len(str_mac) == 0:
-    #Default Mac address, if you are such a lazy guy
-    def_str_mac = "1A-1B-4C-5D-1E-4F"
-    separate = def_str_mac[2]
-    str_mac = def_str_mac.replace(separate, "")
-
-elif len(str_mac) == 17:
+if len(str_mac) == 17:
     #Trans input mac adress
     separate = str_mac[2]
     str_mac = str_mac.replace(separate, "")

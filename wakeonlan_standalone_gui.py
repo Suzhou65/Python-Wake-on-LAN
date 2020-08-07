@@ -28,14 +28,7 @@ def check_mac():
     #Get MAC address
     str_mac = text_mac.get()
     
-    if len(str_mac) == 0:
-        #Default Mac address, if you are such a lazy guy
-        def_str_mac = "1A-1B-4C-5D-1E-4F"
-        separate = def_str_mac[2]
-        str_mac = def_str_mac.replace(separate, "")
-        input_status.set("   Input Default Mac Address   ")
-
-    elif len(str_mac) == 17:
+    if len(str_mac) == 17:
         #Check input mac adress
         separate = str_mac[2]
         str_mac = str_mac.replace(separate, "")
