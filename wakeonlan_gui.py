@@ -1,9 +1,9 @@
 # Python Wake-on-LAN, GUI Function
 # Python Module "wakeonlan" is required
 # Visit https://pypi.org/project/wakeonlan/ to install module
-
 from wakeonlan import send_magic_packet
 import tkinter as tk
+import datetime
 
 #Main windows, tkinter setting
 window = tk.Tk()
@@ -18,13 +18,17 @@ status_lab = tk.StringVar()
 status = tk.Label(window, textvariable=status_lab)
 status.grid(row=4, ipadx=5, pady=5)
 
+#Time function
+def time_log():
+    today = datetime.datetime.now()
+    return today.strftime('%H:%M:%S')
+
 #Exit button command definite
 def close_window (): 
     window.destroy()
 
 #definite WakeUp command
 def wake_up():
-
     #Get Mac address
     str_mac = text_mac.get()
     
@@ -32,20 +36,23 @@ def wake_up():
         #Convert string
         separate = str_mac[2]
         str_mac = str_mac.replace(separate, "")
-        
+       
     elif len(str_mac) != 12:
         #Print error massage if format incorrect
-        status_lab.set("MAC Address format incorrect, sending Fail")
+        time_macchk = time_log()
+        status_lab.set(f"  {time_macchk} | MAC Address format incorrect  ")
 
     #Broadcast range
     str_ip = text_ip.get()
     try:
         send_magic_packet(str_mac, ip_address=str_ip, port=9)
-        status_lab.set("        Magic Packet Sending Success        ")
+        time_success = time_log()
+        status_lab.set(f"  {time_success} | Magic Packet Sending Success  ")
         #If sending success
     except ValueError:
         #If Mac address format or something incorrect
-        status_lab.set("        Sending Fail, Something Wrong        ")
+        time_error = time_log()
+        status_lab.set(f"    {time_error} | Magic Packet Sending Fail    ")
 
 #Definite top description
 label = tk.Label(window, text='Enter MAC address')

@@ -1,6 +1,5 @@
 #coding=utf-8
 #Python Wake-on-LAN, GUI Function
-
 import sys
 import time
 import socket
