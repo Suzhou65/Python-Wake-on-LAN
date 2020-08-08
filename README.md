@@ -14,25 +14,22 @@ Using Python sending Magic Packet to runnung Wake-on-LAN function, has GUI
 Command-line interface support
 ![ScreenShot](https://github.takahashi65.info/lib_img/github_wol_cli.png)
 
-## Releases Status
-[Python-WoL v1.1, stable](https://github.com/Suzhou65/Python-Wake-on-LAN/releases/tag/v1.1-stable)
-
 ## File Description
-**wakeonlan_cli.py** / **wakeonlan_gui.py**  
+**PyPI_wakeonlan_cli.py** / **PyPI_wakeonlan_gui.py**  
 Python Module "wakeonlan" is required
 
-**wakeonlan_standalone_cli.py** / **wakeonlan_standalone_gui.py**  
-Module "wakeonlan" not required
+**SA_wakeonlan_cli.py** / **SA_wakeonlan_gui.py**  
+Module "wakeonlan" not required, stand alone
 
 ## Working Environments
 **Python Module "wakeonlan"**  
 Visit Resources link to install module  
 Standalone version doesn't need to install module
 
-**Python Version**
+**Python Version**  
 Python 3.6.8 or higher
 
-## How Python convert string into bytes
+## How Python convert Mac address string into bytes
 **Method 1**
 ```python
 str_mac = '1A-1B-4C-5D-1E-4F'
