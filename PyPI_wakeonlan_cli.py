@@ -14,6 +14,9 @@ def time_log():
 time_initia = time_log()
 print(f"{time_initia} | Python wakeonlan module required")
 
+#Input IP Address
+str_ip = input("Enter  ( Default is Broadcast ) : ")
+
 #Input Ethernet MAC address
 str_mac = input("Enter MAC Address: ")
 
@@ -28,7 +31,10 @@ elif len(str_mac) != 12:
     print(f"{time_macchk} | MAC Address format incorrect")
 
 #Default is broadcast mode
-str_ip = input(("Enter IP Address ( Default is Broadcast ) : ") or "255.255.255.255")
+if len(str_ip) == 0:
+    str_ip = "255.255.255.255"
+else:
+    pass
 
 #Sending Magic Packet
 send_magic_packet(str_mac, ip_address=str_ip, port=9)

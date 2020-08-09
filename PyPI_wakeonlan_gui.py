@@ -42,8 +42,14 @@ def wake_up():
         time_macchk = time_log()
         status_lab.set(f"  {time_macchk} | MAC Address format incorrect  ")
 
-    #Broadcast range
+    #Default is broadcast mode
     str_ip = text_ip.get()
+
+    if len(str_ip) == 0:
+        str_ip = "255.255.255.255"
+    else:
+        pass
+    
     try:
         send_magic_packet(str_mac, ip_address=str_ip, port=9)
         time_success = time_log()
@@ -66,8 +72,6 @@ text_mac.grid(row=1, ipadx=5, pady=5)
 #Definite input entry
 #Definite IP address
 text_ip = tk.Entry(window, justify='center')
-#Default is broadcast mode
-text_ip.insert(0, "255.255.255.255")
 text_ip.grid(row=2, ipadx=5, pady=5)
 
 #Definite wakeUp command

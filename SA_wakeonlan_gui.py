@@ -46,6 +46,13 @@ def wake_up():
     str_port = 9
     #Get IP address
     str_ip = text_ip.get()
+    
+    #Default is broadcast mode
+    if len(str_ip) == 0:
+        str_ip = "255.255.255.255"
+    else:
+        pass
+
     #Get bytes from check_mac
     bytes_mac = check_mac()
 
@@ -88,7 +95,6 @@ label.grid(row=4, ipadx=5, pady=5)
 
 #Definite IP address input entry, Default is broadcast mode
 text_ip = tk.Entry(window, justify='center')
-text_ip.insert(0, "255.255.255.255")
 text_ip.grid(row=5, ipadx=5, pady=5)
 
 #Definite wakeUp command
