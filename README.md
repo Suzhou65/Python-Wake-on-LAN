@@ -3,6 +3,7 @@
 [![wol](https://github.takahashi65.info/lib_badge/wake-on-lan.svg)](https://pypi.org/project/wakeonlan/) 
 [![python](https://github.takahashi65.info/lib_badge/python.svg)](https://www.python.org/)
 [![python version](https://github.takahashi65.info/lib_badge/python-3.6.svg)](https://www.python.org/) 
+[![UA](https://github.takahashi65.info/lib_badge/raspberry-pi.svg)](https://www.raspberrypi.org/)
 [![UA](https://github.takahashi65.info/lib_badge/active_maintenance.svg)](https://github.com/Suzhou65/Python-Wake-on-LAN)
 
 **What is this?**<br>
@@ -25,14 +26,7 @@ Forwarding Magic Packet and broadcasting, it also record the receiving data.
 
 ![ScreenShot](https://github.takahashi65.info/lib_img/github_wakeonlan_record.png)
 
-## Working Environments
-**Python Module "wakeonlan"**  
-Visit Resources link to install module, standalone version doesn't need to install module.
-
-**Python Version**  
-Python 3.6.8 or higher
-
-## Notify
+## Attention
 **Port Forwarding**  
 You need to setting router port forwarding function, set **Port 9 | UDP** forward to the device you running **wakeonlan_forward.py**. Port 9 is the defult port number sending and receiving Magic Packet, but sometimes you need to switch it, seen the description below.
 
@@ -40,16 +34,26 @@ You need to setting router port forwarding function, set **Port 9 | UDP** forwar
 TCP/UDP ports below 1024 are privileged, so bind socket below 1024 need root privileges. If you didn't using sudo command, you will see the alert message likes below.
 ![ScreenShot](https://github.takahashi65.info/lib_img/github_wakeonlan_forward.png)
 
-If you dont't have root privileges, or cannot using sudo command, please switch the **receive_protocol** port over 1024.
+If you dont't have root privileges, or cannot using sudo command, please switch the **receive_protocol** port over 1024. For example:
 ```python
 try:
     #Print when ready to go
-    receive_protocol = 9
+    receive_protocol = 1080
     receive_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
     receive_socket.bind((receive_host, receive_protocol))
     print (f"{time_start} | Monitoring {receive_host}")
 ```
-  
+
+## Working Environments
+**Python Module "wakeonlan"**  
+Visit Resources link to install module, standalone version (SA) doesn't need to install module.
+
+**Python Version**  
+Due to **f-string** function support version is 3.6 or higher.
+
+**Terminal multiplexer**  
+[GNU Screen](https://www.gnu.org/software/screen/) is recommended, it can let you running Magic Packet forwarding program at background.
+
 ## Resources
 - [wakeonlan Module](https://pypi.org/project/wakeonlan/)
 - [Python Wake-on-LAN, code example](https://github.com/remcohaszing/pywakeonlan)
