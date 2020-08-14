@@ -7,6 +7,7 @@ import datetime
 
 global magic_packet
 global mac_address
+global recording
 
 #Time function
 def time_log():
@@ -57,14 +58,16 @@ except FileNotFoundError:
 #Receiving socket
 receive_host = host_info()
 time_start = time_log()
+
+#Root privileges check
 try:
-    #Print when ready to go
+    #Print monitoring host if ready to go
     receive_protocol = 9
     receive_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
     receive_socket.bind((receive_host, receive_protocol))
-    print (f"{time_start} | Monitoring {receive_host}")
+    print (f"{time_start} | Now monitoring {receive_host}")
 except PermissionError:
-    #Ports below 1024 require root privileges
+    #Ports below 1024 require root privileges, print alert message
     print(f"{time_start} | Ports below 1024 are privileged, require root privileges !")
     sys.exit(0)
 
@@ -74,7 +77,6 @@ broadcast = '255.255.255.255'
 broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 broadcast_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST,1)
 
-global recording
 #Recording start time
 with open('wakeup_record.csv', mode='a') as rf:
     recording=csv.writer(rf)

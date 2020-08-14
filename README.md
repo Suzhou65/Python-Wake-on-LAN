@@ -36,12 +36,17 @@ TCP/UDP ports below 1024 are privileged, so bind socket below 1024 need root pri
 
 If you dont't have root privileges, or cannot using sudo command, please switch the **receive_protocol** port over 1024. For example:
 ```python
+#Root privileges check
 try:
-    #Print when ready to go
+    #Print monitoring host if ready to go
     receive_protocol = 1080
     receive_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
     receive_socket.bind((receive_host, receive_protocol))
-    print (f"{time_start} | Monitoring {receive_host}")
+    print (f"{time_start} | Now monitoring {receive_host}")
+except PermissionError:
+    #Ports below 1024 require root privileges, print alert message
+    print(f"{time_start} | Ports below 1024 are privileged, require root privileges !")
+    sys.exit(0)
 ```
 
 ## Working Environments
