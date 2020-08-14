@@ -46,22 +46,22 @@ try:
     print(f"{time_initia} | Initialize complete")
 except FileNotFoundError:
     #If not exist, create it
-    with open('wakeup_record.csv', mode='w') as rf:
-        record = csv.writer(rf, delimiter=',')
+    with open('wakeup_record.csv', mode='w') as initialize_record:
+        record = csv.writer(initialize_record, delimiter=',')
         record.writerow(['Receive time','MAC address','Description'])
         record.writerow([time_initia,'','initialize'])
+        initialize_record.flush()
         print(f"{time_initia} | Initialize complete. Record file create")
 
-#Receiving socket
 receive_host = host_info()
 time_start = time_log()
-
 #Root privileges check
 try:
-    #Print monitoring host if ready to go
+    #Receiving socket
     receive_protocol = 9
     receive_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
     receive_socket.bind((receive_host, receive_protocol))
+    #Print monitoring host if ready to go
     print (f"{time_start} | Now monitoring {receive_host}")
 except PermissionError:
     #Ports below 1024 require root privileges, print alert message
@@ -73,13 +73,14 @@ broadcast_protocol = 7
 broadcast = '255.255.255.255'
 broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 broadcast_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST,1)
-
+#Forwarding
 try:
     #Recording start time
     with open('wakeup_record.csv', mode='a') as record_file:
         recording=csv.writer(record_file)
         time_record_start = time_log()
         recording.writerow([time_record_start,'','start'])
+        record_file.flush()
         while True:
             #Receiving
             magic_packet, addr = receive_socket.recvfrom(2048)
@@ -89,6 +90,7 @@ try:
                 time_receive = time_log()
                 mac_address = packet2address()
                 recording.writerow([time_receive,mac_address,'receive'])
+                record_file.flush()
                 print(f"{time_receive} | Receiving {mac_address} ")
                 #Sending receive magic packet once
                 broadcast_socket.sendto(magic_packet,(broadcast, broadcast_protocol))
