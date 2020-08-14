@@ -8,15 +8,15 @@ import datetime
 #Main windows, tkinter setting
 window = tk.Tk()
 window.title('Wake-on-LAN')
-window.minsize(300,240)
-window.maxsize(300,240)
+window.minsize(300,270)
+window.maxsize(300,270)
 window.grid_columnconfigure(0, weight=1)
 
 #Setting textvariable status
 global status_lab
 status_lab = tk.StringVar()
 status = tk.Label(window, textvariable=status_lab)
-status.grid(row=4, ipadx=5, pady=5)
+status.grid(row=5, ipadx=5, pady=5)
 
 #Time function
 def time_log():
@@ -70,17 +70,19 @@ text_mac = tk.Entry(window, justify='center')
 text_mac.grid(row=1, ipadx=5, pady=5)
 
 #Definite input entry
+label = tk.Label(window, text='Enter IP address')
+label.grid(row=2, ipadx=5, pady=5)
 #Definite IP address
 text_ip = tk.Entry(window, justify='center')
-text_ip.grid(row=2, ipadx=5, pady=5)
+text_ip.grid(row=3, ipadx=5, pady=5)
 
 #Definite wakeUp command
 buttonWake = tk.Button(window, text="Wake", width=20, command=wake_up)
-buttonWake.grid(row=3, ipadx=5, pady=5)
+buttonWake.grid(row=4, ipadx=5, pady=5)
 
 #Definite exit button
 buttonEnd = tk.Button(window, text="Exit", width=20, command=close_window)
-buttonEnd.grid(row=5, ipadx=5, pady=5)
+buttonEnd.grid(row=6, ipadx=5, pady=5)
 
 #Loop
 window.mainloop()

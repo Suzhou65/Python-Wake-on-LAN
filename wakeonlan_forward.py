@@ -1,13 +1,9 @@
 #coding=utf-8
-import sys
+import os
 import csv
 import time
 import socket
 import datetime
-
-global magic_packet
-global mac_address
-global recording
 
 #Time function
 def time_log():
@@ -26,6 +22,7 @@ def host_info():
     else:
         return socket.gethostbyname(host_name)
 
+global magic_packet
 #Translate MAC address
 def packet2address():
     receive_packet = magic_packet.hex()
@@ -69,7 +66,7 @@ try:
 except PermissionError:
     #Ports below 1024 require root privileges, print alert message
     print(f"{time_start} | Ports below 1024 are privileged, require root privileges !")
-    sys.exit(0)
+    os._exit(0)
 
 #Broadcast socket
 broadcast_protocol = 7
@@ -77,31 +74,31 @@ broadcast = '255.255.255.255'
 broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 broadcast_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST,1)
 
-#Recording start time
-with open('wakeup_record.csv', mode='a') as rf:
-    recording=csv.writer(rf)
-    time_record_start = time_log()
-    recording.writerow([time_record_start,'','start'])
-    try:
-        #Loop
+try:
+    #Recording start time
+    with open('wakeup_record.csv', mode='a') as record_file:
+        recording=csv.writer(record_file)
+        time_record_start = time_log()
+        recording.writerow([time_record_start,'','start'])
         while True:
-            #Receiving magic packet
-            magic_packet, addr = receive_socket.recvfrom(1024)
-
-            #Recording wakeup event
-            time_receive = time_log()
-            mac_address = packet2address()
-            recording.writerow([time_receive,mac_address,'receive'])
-            print(f"{time_receive} | Receiving {mac_address} ")
-
-            time.sleep(1)
-            #Sending receive magic packet once
-            broadcast_socket.sendto(magic_packet,(broadcast, broadcast_protocol))
-
-    except (KeyboardInterrupt, Exception):
-        #Crtl+C to exit
+            #Receiving
+            magic_packet, addr = receive_socket.recvfrom(2048)
+            #If receiving Magic Packet
+            if magic_packet is not None:
+                #Recording wakeup event
+                time_receive = time_log()
+                mac_address = packet2address()
+                recording.writerow([time_receive,mac_address,'receive'])
+                print(f"{time_receive} | Receiving {mac_address} ")
+                #Sending receive magic packet once
+                broadcast_socket.sendto(magic_packet,(broadcast, broadcast_protocol))
+            else:
+                continue
+except KeyboardInterrupt:
+    #Crtl+C to exit
+    with open('wakeup_record.csv', mode='a') as record_file:
+        closing=csv.writer(record_file)
         receive_socket.close()
         time_ending = time_log()
-        recording.writerow([time_ending,'','quit'])
+        closing.writerow([time_ending,'','quit'])
         print(f"\r\n{time_ending} | Thanks for using Wakeup forwarding ...")
-        sys.exit(0)
