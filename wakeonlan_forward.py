@@ -50,7 +50,6 @@ except FileNotFoundError:
         record = csv.writer(initialize_record, delimiter=',')
         record.writerow(['Receive time','MAC address','Description'])
         record.writerow([time_initia,'','initialize'])
-        initialize_record.flush()
         print(f"{time_initia} | Initialize complete. Record file create")
 
 receive_host = host_info()
