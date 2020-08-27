@@ -61,7 +61,7 @@ try:
     receive_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
     receive_socket.bind((receive_host, receive_protocol))
     #Print monitoring host if ready to go
-    print (f"{time_start} | Now monitoring {receive_host}")
+    print (f"{time_start} | Now monitoring {receive_host}, pressing CTRL+C to exit")
 except PermissionError:
     #Ports below 1024 require root privileges, print alert message
     print(f"{time_start} | Ports below 1024 are privileged, require root privileges !")
@@ -102,4 +102,4 @@ except KeyboardInterrupt:
         receive_socket.close()
         time_ending = time_log()
         closing.writerow([time_ending,'','quit'])
-        print(f"\r\n{time_ending} | Thanks for using Wakeup forwarding ...")
+        print(f"\r\n{time_ending} | Thank you for using the Wakeup forwarding.\r\GoodBye ...")
