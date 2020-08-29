@@ -1,16 +1,23 @@
 # Python Running Wake-on-LAN
-
 [![wol](https://github.takahashi65.info/lib_badge/wake-on-lan.svg)](https://pypi.org/project/wakeonlan/) 
 [![python](https://github.takahashi65.info/lib_badge/python.svg)](https://www.python.org/)
 [![python version](https://github.takahashi65.info/lib_badge/python-3.6.svg)](https://www.python.org/) 
-[![UA](https://github.takahashi65.info/lib_badge/raspberry-pi.svg)](https://www.raspberrypi.org/)
+[![php](https://github.takahashi65.info/lib_badge/php-7.3.0.svg)](https://www.php.net/) 
 [![UA](https://github.takahashi65.info/lib_badge/active_maintenance.svg)](https://github.com/Suzhou65/Python-Wake-on-LAN)
 
-**What is this?**<br>
 Using Python sending Magic Packet, or forwarding it.
 ![ScreenShot](https://github.takahashi65.info/lib_img/github_wol_sa_success.png)
 
 ![ScreenShot](https://github.takahashi65.info/lib_img/github_wakeonlan_status.png)
+
+## Contents
+- [Python Running Wake-on-LAN](#python-running-wake-on-lan)
+  * [Contents](#Contents)
+  * [File Description](#file-description)
+  * [Attention](#attention)
+  * [Working Environments](#working-environments)
+  * [Resources](#resources)
+
 ## File Description
 **PyPl folder**  
 Script inside need [" wakeonlan "](https://pypi.org/project/wakeonlan/) module, this version is concept.
@@ -38,7 +45,7 @@ View Magic Packet Magic forwarding status on web browser.
 You need to setting router port forwarding function, set **Port 9 | UDP** forward to the device you running **wakeonlan_forward.py**. Port 9 is the defult port number sending and receiving Magic Packet, but sometimes you need to switch it, seen the description below.
 
 **Port Forwarding Status Monitor**  
-The simple monitoring web page **did not have any secure protection**. If you value you MAC address as personal privacy, please running it on LAN network environments only, or added some protection function, likes HTTP Authorization.
+The simple monitoring web page **did not have any secure protection**. If you value you MAC address as personal privacy, please running it on LAN network environments only, or added some protection function, [see the example GitHub Gist](https://gist.github.com/Suzhou65/eed12200e516aac88b83f8ee6ec3dc7a).
 
 **Root Privileges**  
 TCP/UDP ports below 1024 are privileged, so bind socket below 1024 need root privileges. If you didn't using sudo command, you will see the alert message likes below.
