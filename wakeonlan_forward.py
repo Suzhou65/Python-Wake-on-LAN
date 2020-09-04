@@ -26,15 +26,20 @@ global magic_packet
 #Translate MAC address
 def packet2address():
     receive_packet = magic_packet.hex()
-    packet_list = [receive_packet[i:i+12]
-                   for i in range(0, len(receive_packet), 12)]
-    address_string = packet_list[1]
-    address_length, spliter = len(address_string), len(address_string)/6
-    spliter = int(spliter)
-    address_list = [address_string [i:i+spliter]
-                    for i in range(0, address_length, spliter)]
-    address_spliter = "-"     
-    return address_spliter.join(address_list)
+    try:
+        packet_list = [receive_packet[i:i+12]
+            for i in range(0, len(receive_packet), 12)]
+        address_string = packet_list[1]
+        address_length, spliter = len(address_string), len(address_string)/6
+        spliter = int(spliter)
+        address_list = [address_string [i:i+spliter]
+            for i in range(0, address_length, spliter)]
+        address_spliter = "-"
+        return address_spliter.join(address_list)
+    #If data doesn't look like MAC address
+    except Exception:
+        #IndexError or ValueError
+        return None
 
 #Create record file
 try:
@@ -67,11 +72,6 @@ except PermissionError:
     print(f"{time_start} | Ports below 1024 are privileged, require root privileges !")
     os._exit(0)
 
-#Broadcast socket
-broadcast_protocol = 7
-broadcast = '255.255.255.255'
-broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-broadcast_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST,1)
 #Forwarding
 try:
     #Recording start time
@@ -82,17 +82,30 @@ try:
         record_file.flush()
         while True:
             #Receiving
-            magic_packet, addr = receive_socket.recvfrom(2048)
+            magic_packet, addr = receive_socket.recvfrom(512)
             #If receiving Magic Packet
             if magic_packet is not None:
-                #Recording wakeup event
-                time_receive = time_log()
+                #Check is MAC address or not
                 mac_address = packet2address()
-                recording.writerow([time_receive,mac_address,'receive'])
-                record_file.flush()
-                print(f"{time_receive} | Receiving {mac_address} ")
-                #Sending receive magic packet once
-                broadcast_socket.sendto(magic_packet,(broadcast, broadcast_protocol))
+                if mac_address is None:
+                    #Recording incorrect event
+                    time_incorrect = time_log()
+                    recording.writerow([time_incorrect,'','incorrect'])
+                    record_file.flush()
+                    print(f"{time_incorrect} | Receiving incorrect data")
+                else:
+                    #Broadcast socket
+                    broadcast_protocol = 7
+                    broadcast = '255.255.255.255'
+                    broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                    broadcast_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST,1)
+                    #Recording wakeup event
+                    time_receive = time_log()
+                    recording.writerow([time_receive,mac_address,'receive'])
+                    record_file.flush()
+                    print(f"{time_receive} | Receiving {mac_address}")
+                    #Sending receive magic packet once
+                    broadcast_socket.sendto(magic_packet,(broadcast, broadcast_protocol))    
             else:
                 continue
 except KeyboardInterrupt:
@@ -102,4 +115,4 @@ except KeyboardInterrupt:
         receive_socket.close()
         time_ending = time_log()
         closing.writerow([time_ending,'','quit'])
-        print(f"\r\n{time_ending} | Thank you for using the Wakeup forwarding.\r\GoodBye ...")
+        print(f"\r\n{time_ending} | Thank you for using the Wakeup forwarding.\r\nGoodBye ...")
