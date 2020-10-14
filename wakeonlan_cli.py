@@ -9,6 +9,8 @@ def time_log():
     today = datetime.datetime.now()
     return today.strftime('%Y-%m-%d %H:%M:%S')
 
+#Default MAC address
+default = "5e:bd:ef:3c:38:35"
 #Default sending port
 str_port = 9
 
@@ -18,7 +20,6 @@ print(f"{time_initia} | Python wakeonlan")
 
 #Input IP Address
 str_ip = input("Enter IP Address ( Default is Broadcast ) : ")
-
 #Input Ethernet MAC address
 str_mac = input("Enter MAC Address: ")
 
@@ -28,18 +29,33 @@ if len(str_ip) == 0:
 else:
     pass
 
-if len(str_mac) == 17:
-    #Trans input mac adress
+#Use default MAC address
+if len(str_mac) == 0:
+    separate = default[2]
+    str_mac = default.replace(separate, "")
+    time_usedef = time_log()
+    print(f"{time_usedef} | Use Default MAC Address")
+#Trans input mac adress
+elif len(str_mac) == 17:
     separate = str_mac[2]
     str_mac = str_mac.replace(separate, "")
-
-elif len(str_mac) != 12:
-    #Print error massage if format incorrect
+#Pass if omit separate
+elif len(str_mac) == 12:
+    pass
+#Print error massage if format incorrect
+else:
     time_macchk = time_log()
     print(f"{time_macchk} | MAC Address format incorrect")
+    sys.exit(0)
 
 #Convert input mac adress string into bytes
-bytes_mac = bytes.fromhex("F" * 12 + str_mac *16)
+try:
+    bytes_mac = bytes.fromhex("F" * 12 + str_mac *16)
+#If Mac address format incorrect
+except ValueError:
+    time_macchk = time_log()
+    print(f"{time_macchk} | MAC Address format incorrect")
+    sys.exit(0)
 
 #Send packet to ip address
 time_success = time_log()

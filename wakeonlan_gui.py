@@ -22,24 +22,35 @@ status.grid(row=3, ipadx=5, pady=5)
 def close_window (): 
     window.destroy()
 
-#Default
+#Check input mac adress
 def check_mac():
     #Get MAC address
     str_mac = text_mac.get()
     
-    if len(str_mac) == 17:
-        #Check input mac adress
+    #Default MAC address
+    default = "5e:bd:ef:3c:38:35"
+
+    #Use default MAC address
+    if len(str_mac) == 0:
+        separate = default[2]
+        str_mac = default.replace(separate, "")
+        input_status.set("   Use Default MAC Address   ")
+    #Trans input mac adress
+    elif len(str_mac) == 17:
         separate = str_mac[2]
         str_mac = str_mac.replace(separate, "")
         input_status.set("  MAC Address Check Complete  ")
-
-    elif len(str_mac) != 12:
-        #If Mac address format incorrect
-        input_status.set(" MAC Address Format Incorrect ")
-
+    #Pass if omit separate
+    elif len(str_mac) == 12:
+        pass
+    
     #Convert input mac adress string into bytes
-    return bytes.fromhex("F" * 12 + str_mac *16)
-
+    try:
+        return bytes.fromhex("F" * 12 + str_mac *16)
+    #If Mac address format incorrect
+    except ValueError:
+        input_status.set(" MAC Address Format Incorrect ")
+    
 #Definite WakeUp command
 def wake_up():
     #Default sending port
@@ -73,7 +84,7 @@ def wake_up():
         #Show success massage
         input_status.set(" Magic Packet Sending Success ")
 
-    except ValueError:
+    except Exception:
         #If Mac address format or something incorrect
         input_status.set("Sending Fail, Something Wrong")
 
