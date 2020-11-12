@@ -36,7 +36,10 @@ Forwarding Magic Packet and broadcasting, it also record the receiving data.
 
 ![ScreenShot](https://github.takahashi65.info/lib_img/github_wakeonlan_record.png)
 
-**wakeonlan_status.php**
+**wakeonlan_forward_nolog.py**  
+No logger verison, it won't logging.
+
+**wakeonlan_status.php**  
 View Magic Packet Magic forwarding status on web browser.
 ![ScreenShot](https://github.takahashi65.info/lib_img/github_wakeonlan_forward_status.png)
 
