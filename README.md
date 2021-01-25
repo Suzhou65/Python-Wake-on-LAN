@@ -9,23 +9,24 @@ Using Python sending Magic Packet, or forwarding it.
 
 ## Contents
 - [Python Running Wake-on-LAN](#python-running-wake-on-lan)
+  * [Contents](#contents)
   * [Usage](#usage)
-     + [Port Forwarding](#port-forwarding)
-     + [Root Privileges](#root-privileges)
-     + [Terminal multiplexer](#terminal-multiplexer)
-     + [Port Forwarding Status Monitor](#port-forwarding-status-monitor)
-  * [Python module](#python_module)
-     + [PyPl](#pypl)
+    + [Port Forwarding](#port-forwarding)
+    + [Root Privileges](#root-privileges)
+    + [Terminal multiplexer](#terminal-multiplexer)
+    + [Port Forwarding Status Monitor](#port-forwarding-status-monitor)
+  * [Python module](#python-module)
+    + [PyPl](#pypl)
   * [Function](#function)
-     + [Wake-on-LAN CLI](#wake-on-lan_cli)
-     + [Wake-on-LAN GUI](#wake-on-lan_gui)
-     + [Wake-on-LAN Forwarding](#wake-on-lan_forward)
-     + [Wake-on-LAN Forwarding Nolog](#wake-on-lan_forwarding_nolog)
-     + [Wake-on-LAN Status](#wake-on-lan_status)
+    + [Wake-on-LAN CLI](#wake-on-lan-cli)
+    + [Wake-on-LAN GUI](#wake-on-lan-gui)
+    + [Wake-on-LAN Forwarding](#wake-on-lan-forwarding)
+    + [Wake-on-LAN Forwarding Nolog](#wake-on-lan-forwarding-nolog)
+    + [Wake-on-LAN Status](#wake-on-lan-status)
   * [Dependencies](#dependencies)
-     + [Python version](#python_version)
-     + [Python module](#python_module)
-     + [Apache HTTP Server](#apache-http-server)
+    + [Python version](#python-version)
+    + [Python module](#python-module-1)
+    + [Apache HTTP Server](#apache-http-server)
   * [License](#license)
   * [Resources](#resources)
 
@@ -120,6 +121,31 @@ GoodBye ...
 ```
 The receiving Magic Packet will be translate into MAC address, recording as CSV file with receiving time. The file also recording program start / terminate time, and error occurred time when receiving incomplete packet.
 
+For example:
+```csv
+Receive time,MAC address,Description
+2020-11-04 13:39:33,,initialize
+2020-11-04 13:39:33,,start
+2020-11-04 13:40:58,98-52-5c-73-ab-65,receive
+2020-11-05 20:48:53,ef-f5-35-61-5a-7a,receive
+2020-11-06 12:13:33,5b-0c-f1-c1-4c-b0,receive
+2020-11-07 16:14:41,5b-0c-f1-c1-4c-b0,receive
+2020-11-10 12:08:39,70-a7-af-3d-17-c5,receive
+2020-12-14 01:04:13,,start
+2020-12-17 19:25:25,98-52-5c-73-ab-65,receive
+2020-12-18 16:46:20,70-a7-af-3d-17-c5,receive
+2020-12-24 14:29:08,5b-0c-f1-c1-4c-b0,receive
+2020-12-25 15:36:46,,incorrect
+2020-12-25 16:05:49,5b-0c-f1-c1-4c-b0,receive
+2020-12-28 11:06:24,70-a7-af-3d-17-c5,receive
+2021-01-09 21:27:29,,incorrect
+2021-01-09 21:44:36,70-a7-af-3d-17-c5,receive
+2021-01-10 23:25:05,98-52-5c-73-ab-65,receive
+2021-01-11 14:40:34,5b-0c-f1-c1-4c-b0,receive
+2021-01-18 14:41:05,98-52-5c-73-ab-65,receive
+2021-01-18 19:45:58,ef-f5-35-61-5a-7a,receive
+```
+
 ### Wake-on-LAN Forwarding Nolog
 Forwarding Magic Packet and broadcasting.
 ```shell
@@ -129,7 +155,17 @@ Same function as previous python script, but this one won't generated any record
 
 ### Wake-on-LAN Status
 View Magic Packet Magic forwarding status on web browser.
-![ScreenShot](https://github.takahashi65.info/lib_img/github_wakeonlan_forward_status.png)
+```php
+<?php
+$file = fopen("/home/pi/python_script/wakeup_record.csv","r") or die("Unable to open file!");
+while (($line = fgetcsv($file)) !== false) {
+    echo "<tr>";
+    foreach ($line as $cell) {echo "<td>" . htmlspecialchars($cell) . "</td>";}
+    echo "</tr>\n";}
+    fclose($file);
+?>
+```
+File path depend on you python script location.
 
 ## Dependencies
 ### Python version
