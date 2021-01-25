@@ -6,54 +6,39 @@
 [![UA](https://github.takahashi65.info/lib_badge/active_maintenance.svg)](https://github.com/Suzhou65/Python-Wake-on-LAN)
 
 Using Python sending Magic Packet, or forwarding it.
-![ScreenShot](https://github.takahashi65.info/lib_img/github_wol_sa_success.png)
-
-![ScreenShot](https://github.takahashi65.info/lib_img/github_wakeonlan_status.png)
 
 ## Contents
 - [Python Running Wake-on-LAN](#python-running-wake-on-lan)
-  * [Contents](#Contents)
-  * [File Description](#file-description)
-  * [Attention](#attention)
-  * [Working Environments](#working-environments)
+  * [Usage](#usage)
+     + [Port Forwarding](#port-forwarding)
+     + [Root Privileges](#root-privileges)
+     + [Terminal multiplexer](#terminal-multiplexer)
+     + [Port Forwarding Status Monitor](#port-forwarding-status-monitor)
+  * [Python module](#python_module)
+     + [PyPl](#pypl)
+  * [Function](#function)
+     + [Wake-on-LAN CLI](#wake_on_lan_cli)
+     + [Wake-on-LAN GUI](#wake_on_lan_gui)
+     + [Wake-on-LAN Forwarding](#wake_on_lan_gui_forward)
+     + [Wake-on-LAN Forwarding Nolog](#wake_on_lan_gui_forward_nolog)
+     + [Wake-on-LAN Status](#wake_on_lan_status)
+  * [Dependencies](#dependencies)
+     + [Python version](#python_version)
+     + [Python module](#python_module)
+     + [Apache HTTP Server](#apache-http-server)
+  * [License](#license)
   * [Resources](#resources)
 
-## File Description
-**PyPl folder**  
-Script inside need [" wakeonlan "](https://pypi.org/project/wakeonlan/) module, this version is concept.
 
-**wakeonlan_cli.py**  
-Command-line interface version.
-![ScreenShot](https://github.takahashi65.info/lib_img/github_wol_cli.png)
-
-**wakeonlan_gui.py**  
-Graphical User Interface version.
-![ScreenShot](https://github.takahashi65.info/lib_img/github_wol_success.png)
-
-**wakeonlan_forward.py**  
-Forwarding Magic Packet and broadcasting, it also record the receiving data.
-![ScreenShot](https://github.takahashi65.info/lib_img/github_wakeonlan_root.png)
-
-![ScreenShot](https://github.takahashi65.info/lib_img/github_wakeonlan_record.png)
-
-**wakeonlan_forward_nolog.py**  
-No logger verison, it won't logging.
-
-**wakeonlan_status.php**  
-View Magic Packet Magic forwarding status on web browser.
-![ScreenShot](https://github.takahashi65.info/lib_img/github_wakeonlan_forward_status.png)
-
-## Attention
-**Port Forwarding**  
+## Usage
+### Port Forwarding
 You need to setting router port forwarding function, set **Port 9 | UDP** forward to the device you running **wakeonlan_forward.py**. Port 9 is the defult port number sending and receiving Magic Packet, but sometimes you need to switch it, seen the description below.
 
-**Port Forwarding Status Monitor**  
-The simple monitoring web page **did not have any secure protection**. If you value you MAC address as personal privacy, please running it on LAN network environments only, or added some protection function, [see the example GitHub Gist](https://gist.github.com/Suzhou65/eed12200e516aac88b83f8ee6ec3dc7a).
-
-**Root Privileges**  
+### Root Privileges
 TCP/UDP ports below 1024 are privileged, so bind socket below 1024 need root privileges. If you didn't using sudo command, you will see the alert message likes below.
-![ScreenShot](https://github.takahashi65.info/lib_img/github_wakeonlan_forward.png)
-
+```text
+2020-08-13 17:21:57 | Ports below 1024 are privileged, require root privileges !
+```
 If you dont't have root privileges, or cannot using sudo command, please switch the **receive_protocol** port over 1024. For example:
 ```python
 receive_host = host_info()
@@ -71,13 +56,11 @@ except PermissionError:
     print(f"{time_start} | Ports below 1024 are privileged, require root privileges !")
     os._exit(0)
 ```
+### Terminal multiplexer
+[GNU Screen](https://www.gnu.org/software/screen/) is recommended, it can let you running Magic Packet forwarding program at background.
 
-## Working Environments
-**Python Version**  
-Due to **f-string** function support version is 3.6 or higher.
-
-**Apache HTTP Server**  
-apache2（2.4.46), need to install php 7.3, and enable php function at Apache.
+### Port Forwarding Status Monitor
+Apache HTTP Server, and php 7.3 is necessary, after install, you need to enable php function at Apache.
 ```shell
 sudo apt install php
 sudo apt install libapache2-mod-php7.3
@@ -85,8 +68,89 @@ sudo a2enmod php7.3
 sudo systemctl restart apache2
 ```
 
-**Terminal multiplexer**  
-[GNU Screen](https://www.gnu.org/software/screen/) is recommended, it can let you running Magic Packet forwarding program at background.
+**wakeonlan_status.php** is a simple monitoring web page, it **didn't have any secure protection**. If you value you MAC address as personal privacy, please running it on LAN network environments only, or added some protection function, [see the example GitHub Gist](https://gist.github.com/Suzhou65/eed12200e516aac88b83f8ee6ec3dc7a).
+
+## Python module
+### PyPl
+Script inside folder need [" wakeonlan "](https://pypi.org/project/wakeonlan/) module, this version is concept.
+
+## Function
+### Wake-on-LAN CLI
+Command-line interface version.
+```shell
+pi@raspberrypi:~/python_script $ python wakeonlan_cli.py
+```
+```text
+2020-08-13 17:22:52 | Python wakeonlan
+Enter MAC Address: 2A-61-C8-B1-5E-46
+Enter IP Address ( Default is Broadcast ) : 114.514.19.19
+```
+If magic packet sending successfully, it will print this:
+```text
+2020-08-13 17:22:57 | Magic Packet Sending Success
+```
+If error occurred, it will return massage.
+```text
+2020-08-13 17:23:05 | Error occurred
+[Error Status as string]
+```
+
+### Wake-on-LAN GUI
+Graphical User Interface version.
+```shell
+pi@raspberrypi:~/python_script $ python wakeonlan_gui.py
+```
+It will pop up a graphical user interface windows.
+
+### Wake-on-LAN Forwarding
+Forwarding Magic Packet and broadcasting.
+```shell
+pi@raspberrypi:~/python_script $ python wakeonlan_forward.py
+```
+If initialize successfully, it will print this:
+```text
+2020-08-13 17:22:52 | Initialize complete. Record file create
+2020-08-13 17:22:52 | Now monitoring 10.0.1.19, pressing CTRL+C to exit
+```
+Now it will monitoring the network, and forwarding Magic Packet by broadcasting, it also record the receiving data.
+
+If you want to terminate the Program, pressing CTRL+C, it will print this:
+```
+2020-08-13 17:23:28 | Thank you for using the Wakeup forwarding.
+GoodBye ...
+```
+The receiving Magic Packet will be translate into MAC address, recording as CSV file with receiving time. The file also recording program start / terminate time, and error occurred time when receiving incomplete packet.
+
+### Wake-on-LAN Forwarding Nolog
+Forwarding Magic Packet and broadcasting.
+```shell
+pi@raspberrypi:~/python_script $ python wakeonlan_forward_nolog.py
+```
+Same function as previous python script, but this one won't generated any record file, it won't logging.
+
+### Wake-on-LAN Status
+View Magic Packet Magic forwarding status on web browser.
+![ScreenShot](https://github.takahashi65.info/lib_img/github_wakeonlan_forward_status.png)
+
+## Dependencies
+### Python version
+- Python 3.6 or above
+
+### Python module
+- os
+- sys
+- csv
+- time
+- datetime
+- socket
+- tkinter
+
+### Apache HTTP Server
+apache2, verson 2.4.46 or above
+php 7.3
+
+## License
+General Public License -3.0
 
 ## Resources
 - [wakeonlan Module](https://pypi.org/project/wakeonlan/)
