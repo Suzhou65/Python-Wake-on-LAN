@@ -32,7 +32,7 @@ Using Python sending Magic Packet, or forwarding it.
 
 ## Usage
 ### Port Forwarding
-You need to setting router port forwarding function, set **Port 9 | UDP** forward to the device you running **wakeonlan_forward.py**. Port 9 is the defult port number sending and receiving Magic Packet, but sometimes you need to switch it, seen the description below.
+You need to setting router port forwarding function, set **Port 9 | UDP** forward to the device you running Magic Packet forwarding program. Port 9 is the defult port number sending and receiving Magic Packet, but sometimes you need to switch it due to some limited.
 
 ### Root Privileges
 TCP/UDP ports below 1024 are privileged, so bind socket below 1024 need root privileges. If you didn't using sudo command, you will see the alert message likes below.
@@ -68,7 +68,7 @@ sudo a2enmod php7.3
 sudo systemctl restart apache2
 ```
 
-**wakeonlan_status.php** is a simple monitoring web page, it **didn't have any secure protection**. If you value you MAC address as personal privacy, please running it on LAN network environments only, or added some protection function, [see the example GitHub Gist](https://gist.github.com/Suzhou65/eed12200e516aac88b83f8ee6ec3dc7a).
+**wakeonlan_status.php** is a simple monitoring web page, **it didn't have any secure protection**. If you value you MAC address as personal privacy, please running it on LAN network environments only, or added some protection function, [see the example GitHub Gist](https://gist.github.com/Suzhou65/eed12200e516aac88b83f8ee6ec3dc7a).
 
 ## Python module
 ### PyPl
