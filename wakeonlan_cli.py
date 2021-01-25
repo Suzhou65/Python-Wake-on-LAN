@@ -18,10 +18,10 @@ str_port = 9
 time_initia = time_log()
 print(f"{time_initia} | Python wakeonlan")
 
-#Input IP Address
-str_ip = input("Enter IP Address ( Default is Broadcast ) : ")
 #Input Ethernet MAC address
 str_mac = input("Enter MAC Address: ")
+#Input IP Address
+str_ip = input("Enter IP Address ( Default is Broadcast ) : ")
 
 #Default is broadcast mode
 if len(str_ip) == 0:
@@ -57,19 +57,24 @@ except ValueError:
     print(f"{time_macchk} | MAC Address format incorrect")
     sys.exit(0)
 
-#Send packet to ip address
-time_success = time_log()
-print(f"{time_success} | Magic Packet Sending ...")
-soc = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-soc.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST,1)
-soc.sendto(bytes_mac,(str_ip,str_port))
-#Wait
-time.sleep(2)
-soc.sendto(bytes_mac,(str_ip,str_port))
-#Close sending procress
-soc.close()
-#Print success massage
-time_closed = time_log()
-print(f"{time_closed} | Magic Packet Sending Success")
+try:
+    #Send packet to ip address
+    time_success = time_log()
+    print(f"{time_success} | Magic Packet Sending ...")
+    soc = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    soc.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST,1)
+    soc.sendto(bytes_mac,(str_ip,str_port))
+    #Wait
+    time.sleep(1)
+    soc.sendto(bytes_mac,(str_ip,str_port))
+    #Close sending procress
+    soc.close()
+    #Print success massage
+    time_closed = time_log()
+    print(f"{time_closed} | Magic Packet Sending Success")
+    sys.exit(0)
 
-sys.exit(0)
+except Exception as error:
+    time_error = time_log()
+    print(f"{time_error} | Error occurred \r\n{error}")
+    sys.exit(0)
