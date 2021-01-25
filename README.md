@@ -17,18 +17,17 @@ Using Python sending Magic Packet, or forwarding it.
   * [Python module](#python_module)
      + [PyPl](#pypl)
   * [Function](#function)
-     + [Wake-on-LAN CLI](#wake_on_lan_cli)
-     + [Wake-on-LAN GUI](#wake_on_lan_gui)
-     + [Wake-on-LAN Forwarding](#wake_on_lan_gui_forward)
-     + [Wake-on-LAN Forwarding Nolog](#wake_on_lan_gui_forward_nolog)
-     + [Wake-on-LAN Status](#wake_on_lan_status)
+     + [Wake-on-LAN CLI](#wake-on-lan_cli)
+     + [Wake-on-LAN GUI](#wake-on-lan_gui)
+     + [Wake-on-LAN Forwarding](#wake-on-lan_forward)
+     + [Wake-on-LAN Forwarding Nolog](#wake-on-lan_forwarding_nolog)
+     + [Wake-on-LAN Status](#wake-on-lan_status)
   * [Dependencies](#dependencies)
      + [Python version](#python_version)
      + [Python module](#python_module)
      + [Apache HTTP Server](#apache-http-server)
   * [License](#license)
   * [Resources](#resources)
-
 
 ## Usage
 ### Port Forwarding
