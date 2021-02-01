@@ -116,6 +116,7 @@ Now it will monitoring the network, and forwarding Magic Packet by broadcasting,
 
 If you want to terminate the Program, pressing CTRL+C, it will print this:
 ```
+^C
 2020-08-13 17:23:28 | Thank you for using the Wakeup forwarding.
 GoodBye ...
 ```
@@ -181,8 +182,8 @@ File path depend on you python script location.
 - tkinter
 
 ### Apache HTTP Server
-apache2, verson 2.4.46 or above
-php 7.3
+- apache2, verson 2.4.46 or above
+- php 7.3 or above
 
 ## License
 General Public License -3.0
