@@ -71,8 +71,7 @@ sudo systemctl restart apache2
 **wakeonlan_status.php** is a simple monitoring web page, **it didn't have any secure protection**. If you value you MAC address as personal privacy, please running it on LAN network environments only, or added some protection function, [see the example GitHub Gist](https://gist.github.com/Suzhou65/eed12200e516aac88b83f8ee6ec3dc7a).
 
 ## Python module
-### PyPl
-Script name ```PyPI_wakeonlan_cli.py``` and ```PyPI_wakeonlan_gui.py``` need [" wakeonlan "](https://pypi.org/project/wakeonlan/) module, this version is concept.
+Script name ```PyPI_wakeonlan_cli.py``` and ```PyPI_wakeonlan_gui.py``` need [" wakeonlan "](https://pypi.org/project/wakeonlan/) module, this version is concept to realize how to sending packets via Python.
 
 ## Function
 ### Wake-on-LAN CLI
