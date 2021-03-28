@@ -15,8 +15,7 @@ Using Python sending Magic Packet, or forwarding it.
     + [Root Privileges](#root-privileges)
     + [Terminal multiplexer](#terminal-multiplexer)
     + [Port Forwarding Status Monitor](#port-forwarding-status-monitor)
-  * [Python module](#python-module)
-    + [PyPl](#pypl)
+  * [Import module](#import-module)
   * [Function](#function)
     + [Wake-on-LAN CLI](#wake-on-lan-cli)
     + [Wake-on-LAN GUI](#wake-on-lan-gui)
@@ -25,7 +24,7 @@ Using Python sending Magic Packet, or forwarding it.
     + [Wake-on-LAN Status](#wake-on-lan-status)
   * [Dependencies](#dependencies)
     + [Python version](#python-version)
-    + [Python module](#python-module-1)
+    + [Python module](#python-module)
     + [Apache HTTP Server](#apache-http-server)
   * [License](#license)
   * [Resources](#resources)
@@ -41,20 +40,17 @@ TCP/UDP ports below 1024 are privileged, so bind socket below 1024 need root pri
 ```
 If you dont't have root privileges, or cannot using sudo command, please switch the **receive_protocol** port over 1024. For example:
 ```python
-receive_host = host_info()
-time_start = time_log()
-#Root privileges check
 try:
-    #Receiving socket
-    receive_protocol = 9
-    receive_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
-    receive_socket.bind((receive_host, receive_protocol))
-    #Print monitoring host if ready to go
-    print (f"{time_start} | Now monitoring {receive_host}")
+  # Get Host
+  receive_host = wakeonlan.host_info()
+  # Listening socket config
+  receive_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
+  receive_protocol = 9
+  receive_socket.bind((receive_host, receive_protocol))
+  # If ports below 1024 require root privileges
 except PermissionError:
-    #Ports below 1024 require root privileges, print alert message
-    print(f"{time_start} | Ports below 1024 are privileged, require root privileges !")
-    os._exit(0)
+  print(f"{time_start} | Ports below 1024 are privileged, require root privileges !")
+  sys.exit(0)
 ```
 ### Terminal multiplexer
 [GNU Screen](https://www.gnu.org/software/screen/) is recommended, it can let you running Magic Packet forwarding program at background.
@@ -70,46 +66,48 @@ sudo systemctl restart apache2
 
 **wakeonlan_status.php** is a simple monitoring web page, **it didn't have any secure protection**. If you value you MAC address as personal privacy, please running it on LAN network environments only, or added some protection function, [see the example GitHub Gist](https://gist.github.com/Suzhou65/eed12200e516aac88b83f8ee6ec3dc7a).
 
-## Python module
-Script name ```PyPI_wakeonlan_cli.py``` and ```PyPI_wakeonlan_gui.py``` need [" wakeonlan "](https://pypi.org/project/wakeonlan/) module, this version is concept to realize how to sending packets via Python.
+## Import module
+- Import as module
+```
+import wakeonlan
+```
 
 ## Function
 ### Wake-on-LAN CLI
 Command-line interface version.
 ```shell
-pi@raspberrypi:~/python_script $ python wakeonlan_cli.py
+pi@raspberrypi:~/python_script $ python wakeonlan_script_cli.py
 ```
 ```text
 2020-08-13 17:22:52 | Python wakeonlan
 Enter MAC Address: 2A-61-C8-B1-5E-46
-Enter IP Address ( Default is Broadcast ) : 114.514.19.19
+Enter IP Address ( Default is Broadcast ) : 192.168.0.5
 ```
-If magic packet sending successfully, it will print this:
+It will sending magic packet, and printing:
 ```text
-2020-08-13 17:22:57 | Magic Packet Sending Success
+2020-08-13 17:22:57 | Magic Packet Sending ...
 ```
-If error occurred, it will return massage.
+If set as broadcasting, it will printing:
 ```text
-2020-08-13 17:23:05 | Error occurred
-[Error Status as string]
+2020-08-13 17:23:05 | Magic Packet Broadcasting ...
 ```
 
 ### Wake-on-LAN GUI
 Graphical User Interface version.
 ```shell
-pi@raspberrypi:~/python_script $ python wakeonlan_gui.py
+pi@raspberrypi:~/python_script $ python wakeonlan_script_gui.py
 ```
 It will pop up a graphical user interface windows.
 
 ### Wake-on-LAN Forwarding
 Forwarding Magic Packet and broadcasting.
 ```shell
-pi@raspberrypi:~/python_script $ python wakeonlan_forward.py
+pi@raspberrypi:~/python_script $ python wakeonlan_forwarding.py
 ```
 If initialize successfully, it will print this:
 ```text
 2020-08-13 17:22:52 | Initialize complete. Record file create
-2020-08-13 17:22:52 | Now monitoring 10.0.1.19, pressing CTRL+C to exit
+2020-08-13 17:22:52 | Now monitoring 10.0.1.2, pressing CTRL+C to exit
 ```
 Now it will monitoring the network, and forwarding Magic Packet by broadcasting, it also record the receiving data.
 
@@ -123,47 +121,37 @@ The receiving Magic Packet will be translate into MAC address, recording as CSV 
 
 For example:
 ```csv
-Receive time,MAC address,Description
+stamp,address,status
 2020-11-04 13:39:33,,initialize
 2020-11-04 13:39:33,,start
-2020-11-04 13:40:58,98-52-5c-73-ab-65,receive
-2020-11-05 20:48:53,ef-f5-35-61-5a-7a,receive
-2020-11-06 12:13:33,5b-0c-f1-c1-4c-b0,receive
-2020-11-07 16:14:41,5b-0c-f1-c1-4c-b0,receive
 2020-11-10 12:08:39,70-a7-af-3d-17-c5,receive
-2020-12-14 01:04:13,,start
-2020-12-17 19:25:25,98-52-5c-73-ab-65,receive
-2020-12-18 16:46:20,70-a7-af-3d-17-c5,receive
 2020-12-24 14:29:08,5b-0c-f1-c1-4c-b0,receive
-2020-12-25 15:36:46,,incorrect
-2020-12-25 16:05:49,5b-0c-f1-c1-4c-b0,receive
+2020-12-25 15:36:46,,omit
 2020-12-28 11:06:24,70-a7-af-3d-17-c5,receive
-2021-01-09 21:27:29,,incorrect
-2021-01-09 21:44:36,70-a7-af-3d-17-c5,receive
-2021-01-10 23:25:05,98-52-5c-73-ab-65,receive
+2021-01-09 21:27:29,,omit
 2021-01-11 14:40:34,5b-0c-f1-c1-4c-b0,receive
-2021-01-18 14:41:05,98-52-5c-73-ab-65,receive
-2021-01-18 19:45:58,ef-f5-35-61-5a-7a,receive
+2021-01-18 19:45:58,,quit
 ```
 
 ### Wake-on-LAN Forwarding Nolog
 Forwarding Magic Packet and broadcasting.
 ```shell
-pi@raspberrypi:~/python_script $ python wakeonlan_forward_nolog.py
+pi@raspberrypi:~/python_script $ python wakeonlan_forwarding_nolog.py
 ```
 Same function as previous python script, but this one won't generated any record file, it won't logging.
 
 ### Wake-on-LAN Status
 View Magic Packet Magic forwarding status on web browser.
 ```php
+<!-- php block -->
 <?php
-$file = fopen("/home/pi/python_script/wakeup_record.csv","r") or die("Unable to open file!");
-while (($line = fgetcsv($file)) !== false) {
-    echo "<tr>";
-    foreach ($line as $cell) {echo "<td>" . htmlspecialchars($cell) . "</td>";}
-    echo "</tr>\n";}
-    fclose($file);
-?>
+  // File path as you python script location
+  if ($file = fopen("/python_script_location/wakeup_record.csv","r")){
+    while (($line = fgetcsv($file)) !== false){
+      echo "<tr>";
+      foreach ($line as $cell) {echo "<td>" . htmlspecialchars($cell) . "</td>";}
+      echo "</tr>\n";}
+      fclose($file);
 ```
 File path depend on you python script location.
 
@@ -172,7 +160,6 @@ File path depend on you python script location.
 - Python 3.6 or above
 
 ### Python module
-- os
 - sys
 - csv
 - time
