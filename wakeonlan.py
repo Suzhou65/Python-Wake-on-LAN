@@ -1,26 +1,57 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
 import csv
-import time
 import socket
 import datetime
+
+# Defult program status file and path
+defult_path_status = "status_program.csv"
+# Defult wakeup record file and path
+defult_path_wakeup_record = "wakeup_record.csv"
 
 # Time function
 def stamp():
     today = datetime.datetime.now()
     return today.strftime('%Y-%m-%d %H:%M:%S')
 
+# Program Status
+def program_status( path_status=() ,event=() ):
+    if bool(path_status) is False:
+        path_status = defult_path_status
+    elif bool(path_status) is True:
+        pass
+    # header
+    ststus_header = ["Time", "Status"]
+    # Status
+    if bool(event) is False:
+        status_table =  [stamp(), ""]
+    elif bool(event) is True:
+        status_table =  [stamp(), event]
+    # Zip
+    rows = zip(ststus_header,status_table)
+    # Create status file
+    with open(path_status, "w", newline="") as status_file:
+        status_tape = csv.writer(status_file)
+        for row in rows:
+            status_tape.writerow(row)
+        status_file.close()
+    return status_table
+
 # Create recording
-def record_tape():
+def record_tape( path_wakeup_record=() ):
+    if bool(path_wakeup_record) is False:
+        path_wakeup_record = defult_path_wakeup_record
+    elif bool(path_wakeup_record) is True:
+        pass
     time_initia = stamp()
     # If exist, end check process
     try:
-        record = open("wakeup_record.csv", mode="r")
+        record = open(path_wakeup_record, mode="r")
         print(f"{time_initia} | Initialize complete")
         record.close()
         return True
     # If not exist, create it
     except FileNotFoundError:
-        with open("wakeup_record.csv", mode="w", newline="") as tape_initialize:
+        with open(path_wakeup_record, mode="w", newline="") as tape_initialize:
             record = csv.writer(tape_initialize, delimiter=",")
             record.writerow(["stamp","address","status"])
             record.writerow([time_initia,"","initialize"])
