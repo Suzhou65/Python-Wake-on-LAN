@@ -26,8 +26,8 @@ def program_status( path_status=() ,event=() ):
         status_table =  [stamp(), ""]
     elif bool(event) is True:
         status_table =  [stamp(), event]
-    # Zip
-    rows = zip(ststus_header,status_table)
+    # Zipped
+    rows = [ststus_header,status_table]
     # Create status file
     with open(path_status, "w", newline="") as status_file:
         status_tape = csv.writer(status_file)
