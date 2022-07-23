@@ -1,4 +1,4 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
 import sys
 import csv
 import socket
@@ -6,7 +6,6 @@ import wakeonlan
 
 # Ignore wakeup all
 ignroe_reveille = True
-broadcast_wakeup = "ff-ff-ff-ff-ff-ff"
 # program status file and path
 path_status = "status_program.csv"
 # wakeup record file and path
@@ -34,8 +33,6 @@ try:
     # Recording start time
     with open(path_wakeup_record, mode="a", newline="") as tape:
         recording=csv.writer(tape)
-        recording.writerow([time_start,"","start"])
-        tape.flush()
         print(f"{time_start} | Now monitoring {receive_host}, pressing CTRL+C to exit")
         wakeonlan.program_status(path_status, event="Now monitoring")
         # Ready
@@ -53,8 +50,9 @@ try:
                     tape.flush()
                     print(f"{time_receive} | Receiving incorrect data")
                 elif type(address) is str:
+                    broadcast_wakeup = "ff-ff-ff-ff-ff-ff"
                     if address == broadcast_wakeup and ignroe_reveille is True:
-                        recording.writerow([time_receive,"","omit"])
+                        recording.writerow([time_receive,"","omit reveille"])
                         tape.flush()
                         print(f"{time_receive} | Ignore wakeup all")
                     else:
@@ -75,11 +73,13 @@ try:
                 continue
 # Exit
 except KeyboardInterrupt:
-    with open(path_wakeup_record, mode="a", newline="") as tape:
-        exiting = csv.writer(tape)
-        ending = wakeonlan.stamp()
-        exiting.writerow([ending,"","quit"])
-        tape.close()
-        print(f"\r\n{ending} | Thank you for using the Wakeup forwarding.\r\nGoodBye ...")
-        wakeonlan.program_status(path_status, event="Program not running")
-        sys.exit(0)
+    manual_quit = wakeonlan.stamp()
+    print(f"\r\n{manual_quit} | Thank you for using the Wakeup forwarding.\r\nGoodBye ...")
+    wakeonlan.program_status(path_status, event="Program not running")
+    sys.exit(0)
+# If something wrong
+except Exception as error_status:
+    error_quit = wakeonlan.stamp()
+    print(f"\r\n{error_quit} | Program stop running due to unexpected error.")
+    wakeonlan.program_status(path_status, event="Error occurred")
+    sys.exit(0)
