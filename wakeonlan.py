@@ -20,10 +20,10 @@ def program_status( path_status=() ,event=() ):
     elif bool(path_status) is True:
         pass
     # header
-    ststus_header = ["Time", "Status"]
+    ststus_header = ["Time","Program Status"]
     # Status
     if bool(event) is False:
-        status_table =  [stamp(), ""]
+        status_table =  [stamp(),"Initialize"]
     elif bool(event) is True:
         status_table =  [stamp(), event]
     # Zipped
@@ -42,20 +42,19 @@ def record_tape( path_wakeup_record=() ):
         path_wakeup_record = defult_path_wakeup_record
     elif bool(path_wakeup_record) is True:
         pass
-    time_initia = stamp()
+    time_initialize = stamp()
     # If exist, end check process
     try:
         record = open(path_wakeup_record, mode="r")
-        print(f"{time_initia} | Initialize complete")
+        print(f"{time_initialize} | Initialize complete")
         record.close()
         return True
     # If not exist, create it
     except FileNotFoundError:
         with open(path_wakeup_record, mode="w", newline="") as tape_initialize:
             record = csv.writer(tape_initialize, delimiter=",")
-            record.writerow(["stamp","address","status"])
-            record.writerow([time_initia,"","initialize"])
-            print(f"{time_initia} | Initialize complete. Record file create")
+            record.writerow(["Time","Address"])
+            print(f"{time_initialize} | Initialize complete. Record file create")
             tape_initialize.close()
             return False
 

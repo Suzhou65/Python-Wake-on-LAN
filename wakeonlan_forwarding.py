@@ -46,13 +46,13 @@ try:
                 # Check
                 if type(address) is bool:
                     # Omit incorrect
-                    recording.writerow([time_receive,"","omit"])
+                    recording.writerow([time_receive,"Omit"])
                     tape.flush()
                     print(f"{time_receive} | Receiving incorrect data")
                 elif type(address) is str:
                     broadcast_wakeup = "ff-ff-ff-ff-ff-ff"
                     if address == broadcast_wakeup and ignroe_reveille is True:
-                        recording.writerow([time_receive,"","omit reveille"])
+                        recording.writerow([time_receive,"Omit Reveille"])
                         tape.flush()
                         print(f"{time_receive} | Ignore wakeup all")
                     else:
@@ -66,7 +66,7 @@ try:
                         # Print receiving
                         print(f"{time_receive} | Receiving {address}")
                         # Recording wakeup event
-                        recording.writerow([time_receive,address,"receive"])
+                        recording.writerow([time_receive,address])
                         tape.flush()        
             # If not, keep receiving
             else:
