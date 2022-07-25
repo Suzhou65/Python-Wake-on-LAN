@@ -3,6 +3,9 @@ import sys
 import socket
 import wakeonlan
 
+# Ignore wakeup all
+ignroe_reveille = True
+
 # Forwarding
 try:
     time_start = wakeonlan.stamp()
@@ -33,16 +36,20 @@ try:
                 time_incorrect = wakeonlan.stamp()
                 print(f"{time_incorrect} | Receiving incorrect data")
             elif type(address) is str:
-                time_receive = wakeonlan.stamp()
-                # Translate MAC
-                payload = wakeonlan.address2packet(address)
-                # Socket config
-                broadcast_range = "255.255.255.255"
-                broadcast_protocol = 7
-                # Sending
-                wakeonlan.packet_broadcasting(payload, broadcast_range, broadcast_protocol)
-                # Print receiving
-                print(f"{time_receive} | Receiving {address}")
+                broadcast_wakeup = "ff-ff-ff-ff-ff-ff"
+                if address == broadcast_wakeup and ignroe_reveille is True:
+                    print(f"{time_receive} | Ignore reveille")
+                else:
+                    time_receive = wakeonlan.stamp()
+                    # Translate MAC
+                    payload = wakeonlan.address2packet(address)
+                    # Socket config
+                    broadcast_range = "255.255.255.255"
+                    broadcast_protocol = 7
+                    # Sending
+                    wakeonlan.packet_broadcasting(payload, broadcast_range, broadcast_protocol)
+                    # Print receiving
+                    print(f"{time_receive} | Receiving {address} and broadcasting")
         # If not, keep receiving
         else:
             continue
@@ -50,4 +57,9 @@ try:
 except KeyboardInterrupt:
     ending = wakeonlan.stamp()
     print(f"\r\n{ending} | Thank you for using the Wakeup forwarding.\r\nGoodBye ...")
+    sys.exit(0)
+# If something wrong
+except Exception:
+    error_quit = wakeonlan.stamp()
+    print(f"\r\n{error_quit} | Program stop running due to unexpected error.")
     sys.exit(0)

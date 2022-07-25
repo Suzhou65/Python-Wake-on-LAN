@@ -26,9 +26,7 @@
     </head>
     <!-- Body -->
     <body>
-        <div class="banner">
-            Monitor Status
-        </div>
+        <div class="banner">Monitor Status</div>
         <table class="csv_output">
             <!-- php block -->
             <?php

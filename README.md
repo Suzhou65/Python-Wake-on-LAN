@@ -121,16 +121,21 @@ The receiving Magic Packet will be translate into MAC address, recording as CSV 
 
 For example:
 ```csv
-stamp,address,status
-2020-11-04 13:39:33,,initialize
-2020-11-04 13:39:33,,start
-2020-11-10 12:08:39,70-a7-af-3d-17-c5,receive
-2020-12-24 14:29:08,5b-0c-f1-c1-4c-b0,receive
-2020-12-25 15:36:46,,omit
-2020-12-28 11:06:24,70-a7-af-3d-17-c5,receive
-2021-01-09 21:27:29,,omit
-2021-01-11 14:40:34,5b-0c-f1-c1-4c-b0,receive
-2021-01-18 19:45:58,,quit
+stamp,address
+
+2020-11-10 12:08:39,70-a7-af-3d-17-c5
+2020-12-24 14:29:08,5b-0c-f1-c1-4c-b0
+2020-12-25 15:36:46,Omit
+2020-12-28 11:06:24,70-a7-af-3d-17-c5
+2021-01-09 21:27:29,Omit
+2021-01-11 14:40:34,5b-0c-f1-c1-4c-b0
+2021-01-18 19:45:58,Omit Reveille
+```
+
+You can also setting ```Ignore wakeup all``` configuration, this configuration is inside the forwarding script.
+```python
+# Ignore wakeup all
+ignroe_reveille = True
 ```
 
 ### Wake-on-LAN Forwarding Nolog
@@ -139,6 +144,13 @@ Forwarding Magic Packet and broadcasting.
 pi@raspberrypi:~/python_script $ python wakeonlan_forwarding_nolog.py
 ```
 Same function as previous python script, but this one won't generated any record file, it won't logging.
+
+You can also setting ```Ignore wakeup all``` configuration, this configuration is inside the forwarding script.
+```python
+# Ignore wakeup all
+ignroe_reveille = True
+```
+
 
 ### Wake-on-LAN Status
 View Magic Packet Magic forwarding status on web browser.
@@ -162,7 +174,6 @@ File path depend on you python script location.
 ### Python module
 - sys
 - csv
-- time
 - datetime
 - socket
 - tkinter
