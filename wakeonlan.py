@@ -1,123 +1,152 @@
 # -*- coding: utf-8 -*-
 import csv
 import socket
+import logging
 import datetime
 
-# Defult program status file and path
-defult_path_status = "status_program.csv"
-# Defult wakeup record file and path
-defult_path_wakeup_record = "wakeup_record.csv"
+# For error handling, logfile config
+FORMAT = "%(asctime)s |%(levelname)s |%(message)s"
+# Error logfile name and level config
+logging.basicConfig(level=logging.WARNING,filename="wakeonlan.error.log",filemode="a",format=FORMAT)
 
-# Time function
-def stamp():
-    today = datetime.datetime.now()
-    return today.strftime('%Y-%m-%d %H:%M:%S')
+# Generate timestamp
+def GetTime():
+    CurrentTime = datetime.datetime.now()
+    return CurrentTime.strftime("%Y-%m-%d %H:%M")
 
-# Program Status
-def program_status( path_status=() ,event=() ):
-    if bool(path_status) is False:
-        path_status = defult_path_status
-    elif bool(path_status) is True:
+# Check wakeup event and status record file
+def RecordFileInitialize(RecordFilePath=(),StatusFilePath=()):
+    if bool(RecordFilePath) is True:
+        try:
+            CheckRecordFile = open(RecordFilePath,mode="r")
+            CheckRecordFile.close()
+        except FileNotFoundError:
+            with open(RecordFilePath,mode="w",newline="") as RecordTapeInitialize:
+                RecordTape = csv.writer(RecordTapeInitialize, delimiter=",")
+                RecordTape.writerow(["Time","Address"])
+                RecordTapeInitialize.close()
+    elif bool(RecordFilePath) is False:
         pass
-    # header
-    ststus_header = ["Time","Program Status"]
-    # Status
-    if bool(event) is False:
-        status_table =  [stamp(),"Initialize"]
-    elif bool(event) is True:
-        status_table =  [stamp(), event]
-    # Zipped
-    rows = [ststus_header,status_table]
-    # Create status file
-    with open(path_status, "w", newline="") as status_file:
-        status_tape = csv.writer(status_file)
-        for row in rows:
-            status_tape.writerow(row)
-        status_file.close()
-    return status_table
-
-# Create recording
-def record_tape( path_wakeup_record=() ):
-    if bool(path_wakeup_record) is False:
-        path_wakeup_record = defult_path_wakeup_record
-    elif bool(path_wakeup_record) is True:
+    if bool(StatusFilePath) is True:
+        try:
+            CheckStatusFile = open(StatusFilePath,mode="r")
+            CheckStatusFile.close()
+        except FileNotFoundError:
+            with open(StatusFilePath,mode="w",newline="") as StatusTapeInitialize:
+                StatusTape = csv.writer(StatusTapeInitialize,delimiter=",")
+                CreateStatusTapeTime = GetTime()
+                StatusTape.writerow([CreateStatusTapeTime,"Initialization complete"])
+                StatusTapeInitialize.close()
+    elif bool(StatusFilePath) is False:
         pass
-    time_initialize = stamp()
-    # If exist, end check process
+
+# Typing MAC address accepted
+def AddressBooking(RecordFilePath,AddressLogging=()):
     try:
-        record = open(path_wakeup_record, mode="r")
-        print(f"{time_initialize} | Initialize complete")
-        record.close()
-        return True
-    # If not exist, create it
-    except FileNotFoundError:
-        with open(path_wakeup_record, mode="w", newline="") as tape_initialize:
-            record = csv.writer(tape_initialize, delimiter=",")
-            record.writerow(["Time","Address"])
-            print(f"{time_initialize} | Initialize complete. Record file create")
-            tape_initialize.close()
-            return False
+        AddressBookingTime = GetTime()
+        AddressBookingRow = [AddressBookingTime,AddressLogging]
+        # Writing to MAC address record
+        with open(RecordFilePath,mode="a+",newline="") as AddressBook:
+            AddressTape = csv.writer(AddressBook,delimiter=",")
+            AddressTape.writerow(AddressBookingRow)
+            AddressBook.close()
+        return AddressBookingRow
+    except Exception as BookingError:
+        logging.exception(BookingError)
+        pass
 
-# Host check
-def host_info():
-    host_name = socket.gethostname()
-    get_ip = socket.gethostbyname(host_name)
+# Program executive logging
+def StatusBooking(StatusFilePath,StatusLogging=()):
+    try:
+        StatusBookingTime = GetTime()
+        StatusBookingRow = [StatusBookingTime,StatusLogging]
+        # Writing status record
+        with open(StatusFilePath,mode="w",newline="") as StatusBook:
+            StatusTape = csv.writer(StatusBook, delimiter=",")
+            StatusTape.writerow(StatusBookingRow)
+            StatusBook.close()
+            return StatusBookingRow
+    except Exception as BookingError:
+        logging.exception(BookingError)
+        pass
+
+# Check LAN environment
+def NetEnvkCheck():
+    AskHostName = socket.gethostname()
+    AskIP = socket.gethostbyname(AskHostName)
     # check get localhost ip address or not
-    if get_ip == '127.0.1.1' or '127.0.0.1':
-        check_host = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        check_host.connect(("8.8.8.8", 80))
-        return check_host.getsockname()[0]
+    if AskIP == "127.0.1.1" or "127.0.0.1":
+        CheckHost = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        CheckHost.connect(("8.8.8.8",80))
+        return CheckHost.getsockname()[0]
     else:
-        return socket.gethostbyname(host_name)
+        return socket.gethostbyname(AskHostName)
 
-# Translate MAC address to packet
-def address2packet(address):
-    # Trans input mac adress
-    if len(address) == 17:
-        separate = address[2]
-        address = address.replace(separate, "")
-    # Pass if omit separate
-    elif len(address) == 12:
-        pass
-    # If format incorrect
-    else:
-        return True
-    # Convert input mac adress string into bytes
+# Convert MAC address to bytes
+def Address2Packet(MacAddress):
     try:
-        bytes_mac = bytes.fromhex("F" * 12 + address *16)
-        return bytes_mac
-    # If Mac address format incorrect
-    except ValueError:
+        # With separate character
+        if len(MacAddress) == 17:
+            SeparateCharacter = MacAddress[2]
+            # Remove separate character
+            MacAddress = MacAddress.replace(SeparateCharacter,"")
+            # Turn string into bytes
+            BytesMacAddress = bytes.fromhex("F" * 12 + MacAddress *16)
+            return BytesMacAddress
+        # Without separate character
+        elif len(MacAddress) == 12:
+            BytesMacAddress = bytes.fromhex("F" * 12 + MacAddress *16)
+            return BytesMacAddress
+        # If format incorrect
+        else:
+            return False
+    except Exception as ConvertError:
+        logging.exception(ConvertError)
         return False
 
-# Translate bytes to MAC address
-def packet2address(receiving):
-    decode_receiving = receiving.hex()
+# Convert bytes to MAC address
+def Packet2Address(PacketInput):
     try:
-        packet_list = [decode_receiving[i:i+12]
-            for i in range(0, len(decode_receiving),12)]
-        address_string = packet_list[1]
-        address_length, spliter = len(address_string),len(address_string)/6
-        spliter = int(spliter)
-        address_list = [address_string [i:i+spliter]
-            for i in range(0, address_length, spliter)]
-        address_spliter = "-"
-        return address_spliter.join(address_list)
+        # Convert Hexadecimal
+        DecodePacket = PacketInput.hex()
+        # Recursion
+        Decode2List = [DecodePacket[i:i+12]
+            for i in range(0, len(DecodePacket),12)]
+        # Get payload
+        MacAddressString = Decode2List[1]
+        # 
+        StringLength, StringSpliter = len(MacAddressString),len(MacAddressString)/6
+        StringSpliter = int(StringSpliter)
+        AddressOutput = [MacAddressString [i:i+StringSpliter]
+            for i in range(0, StringLength, StringSpliter)]
+        # Separate character
+        SpliterCharacter = ":"
+        return SpliterCharacter.join(AddressOutput).upper()
     #If data doesn't look like MAC address
-    except Exception:
+    except Exception as ConvertError:
+        logging.exception(ConvertError)
         return False
 
-def packet_broadcasting(payload, default_config=(), broadcast_range=(), broadcast_protocol=() ):
-    # Broadcast socket
-    broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    broadcast_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST,1)
-    if bool(default_config) is True:
-        broadcast_range = "255.255.255.255"
-        broadcast_protocol = 9
-        # broadcasting
-        broadcast_socket.sendto(payload,(broadcast_range, broadcast_protocol))
-        broadcast_socket.close()
-    else:
-        # Sending
-        broadcast_socket.sendto(payload,(broadcast_range, broadcast_protocol))
-        broadcast_socket.close()
+def LocalBroadcasting(PacketPayload,SelectAddress=(),SelectProtocolNumber=()):
+    try:
+        # IP address config
+        if bool(SelectAddress) is False:
+            SelectAddress = "255.255.255.255"
+        elif bool(SelectAddress) is True:
+            pass
+        # Port config
+        if bool(SelectProtocolNumber) is False:
+            SelectProtocolNumber = 9
+        elif bool(SelectProtocolNumber) is True:
+            pass
+        # Broadcast socket config
+        BroadcastMission = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        BroadcastMission.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST,1)
+        BroadcastMission.sendto(PacketPayload,(SelectAddress,SelectProtocolNumber))
+        BroadcastMission.close()
+        return PacketPayload
+    except Exception as BroadcastingError:
+        logging.exception(BroadcastingError)
+        return False
+
+# 2024.03.15

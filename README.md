@@ -3,7 +3,7 @@
 [![python version](https://github.takahashi65.info/lib_badge/python-3.6.svg)](https://www.python.org/) 
 [![php](https://github.takahashi65.info/lib_badge/php-7.3.0.svg)](https://www.php.net/) 
 [![UA](https://github.takahashi65.info/lib_badge/active_maintenance.svg)](https://github.com/Suzhou65/Python-Wake-on-LAN)
-[![Size](https://github-size-badge.herokuapp.com/Suzhou65/Python-Wake-on-LAN.svg)](https://github.com/axetroy/github-size-badge)
+[![Size](https://img.shields.io/github/repo-size/Suzhou65/Python-Wake-on-LAN)](https://shields.io/category/size)
 
 Using Python sending Magic Packet, or forwarding it.
 
