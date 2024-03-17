@@ -1,0 +1,12 @@
+{
+  "AllowAddress": [
+    "AA:AA:AA:AA:AA:AA",
+    "BB:BB:BB:BB:BB:BB",
+    "CC:CC:CC:CC:CC:CC",
+    "DD:DD:DD:DD:DD:DD",
+    "EE:EE:EE:EE:EE:EE"
+  ],
+  "Comment":[
+    "USE CAPITAL CASE"
+  ] 
+}

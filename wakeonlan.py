@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import csv
+import json
 import socket
 import logging
 import datetime
@@ -39,6 +40,28 @@ def RecordFileInitialize(RecordFilePath=(),StatusFilePath=()):
                 StatusTapeInitialize.close()
     elif bool(StatusFilePath) is False:
         pass
+
+# Check whitelist file
+def WhitelistInitialize(WhitelistPath):
+    try:
+        with open(WhitelistPath,"r") as WhitelistCheck:
+                WhitelistCheck.close()
+    except FileNotFoundError:
+        # Dictionary
+        WhitelistDict = {
+            "AllowAddress":[
+                "AA:AA:AA:AA:AA:AA",
+                "BB:BB:BB:BB:BB:BB",
+                "CC:CC:CC:CC:CC:CC",
+                "DD:DD:DD:DD:DD:DD",
+                "EE:EE:EE:EE:EE:EE"],
+            "Comment":[
+                "USE CAPITAL CASE"]
+                }
+        # Save
+        with open(WhitelistPath,"w") as WhitelistCreate:
+            json.dump(WhitelistDict,WhitelistCreate,indent=2)
+            WhitelistCreate.close()
 
 # Typing MAC address accepted
 def AddressBooking(RecordFilePath,AddressLogging=()):
@@ -127,6 +150,30 @@ def Packet2Address(PacketInput):
         logging.exception(ConvertError)
         return False
 
+# Check WakeonLAN address if needed
+def AddressFilter(RandomMacAddress,WhitelistPath):
+    try:
+        # Upper to capital case
+        RandomMacAddress = RandomMacAddress.upper()
+        # Read JSON storage whitelist
+        with open(WhitelistPath,"r") as CheckReference:
+            CheckBook = json.load(CheckReference)
+            # Get list
+            for ReferenceAddress in CheckBook["AllowAddress"]:
+                # Inside whitelist
+                if RandomMacAddress == ReferenceAddress.upper():
+                    return RandomMacAddress
+                # Otherwise
+                elif RandomMacAddress != ReferenceAddress.upper():
+                    return 401
+    # Whitelist JSON not found
+    except FileNotFoundError:
+        return RandomMacAddress
+    except Exception as FilterError:
+        logging.exception(FilterError)
+        return False
+
+# Sending WakeonLAN packet
 def LocalBroadcasting(PacketPayload,SelectAddress=(),SelectProtocolNumber=()):
     try:
         # IP address config
@@ -149,4 +196,4 @@ def LocalBroadcasting(PacketPayload,SelectAddress=(),SelectProtocolNumber=()):
         logging.exception(BroadcastingError)
         return False
 
-# 2024.03.15
+# 2024.03.17
