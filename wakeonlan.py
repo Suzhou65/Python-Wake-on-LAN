@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.WARNING,filename="wakeonlan.error.log",filemod
 # Generate timestamp
 def GetTime():
     CurrentTime = datetime.datetime.now()
-    return CurrentTime.strftime("%Y-%m-%d %H:%M")
+    return CurrentTime.strftime("%Y-%m-%d %H:%M:%S")
 
 # Check wakeup event and status record file
 def RecordFileInitialize(RecordFilePath=(),StatusFilePath=()):
@@ -50,11 +50,11 @@ def WhitelistInitialize(WhitelistPath):
         # Dictionary
         WhitelistDict = {
             "AllowAddress":[
-                "AA:AA:AA:AA:AA:AA",
-                "BB:BB:BB:BB:BB:BB",
-                "CC:CC:CC:CC:CC:CC",
-                "DD:DD:DD:DD:DD:DD",
-                "EE:EE:EE:EE:EE:EE"],
+                "",
+                "",
+                "",
+                "",
+                ""],
             "Comment":[
                 "USE CAPITAL CASE"]
                 }
