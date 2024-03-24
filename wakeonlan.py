@@ -56,7 +56,8 @@ def WhitelistInitialize(WhitelistPath):
                 "",
                 ""],
             "Comment":[
-                "USE CAPITAL CASE"]
+                "USE CAPITAL CASE",
+                "IF YOU ALLOW WAKEUP ALL, ADD FF:FF:FF:FF:FF:FF INTO AllowAddress LIST"]
                 }
         # Save
         with open(WhitelistPath,"w") as WhitelistCreate:
@@ -64,14 +65,15 @@ def WhitelistInitialize(WhitelistPath):
             WhitelistCreate.close()
 
 # Typing MAC address accepted
-def AddressBooking(RecordFilePath,AddressLogging=()):
+def AddressBooking(RecordFilePath,AddressLogging):
     try:
         AddressBookingTime = GetTime()
         AddressBookingRow = [AddressBookingTime,AddressLogging]
         # Writing to MAC address record
-        with open(RecordFilePath,mode="a+",newline="") as AddressBook:
+        with open(RecordFilePath,mode="a",newline="") as AddressBook:
             AddressTape = csv.writer(AddressBook,delimiter=",")
             AddressTape.writerow(AddressBookingRow)
+            AddressBook.flush()
             AddressBook.close()
         return AddressBookingRow
     except Exception as BookingError:
@@ -151,7 +153,7 @@ def Packet2Address(PacketInput):
         return False
 
 # Check WakeonLAN address if needed
-def AddressFilter(RandomMacAddress,WhitelistPath):
+def AddressFilter(WhitelistPath,RandomMacAddress):
     try:
         # Upper to capital case
         RandomMacAddress = RandomMacAddress.upper()
@@ -196,4 +198,50 @@ def LocalBroadcasting(PacketPayload,SelectAddress=(),SelectProtocolNumber=()):
         logging.exception(BroadcastingError)
         return False
 
-# 2024.03.17
+# Forwarding MAC address
+def SocketForwarding(AddressInput,WhitelistPath=(),RecordFilePath=(),SelectAddress=(),SelectProtocolNumber=()):
+    # Receiving incorrect data
+    if type(AddressInput) is bool:
+        AddressLogging=("Omit incorrect data")
+        # Logging incorrect data receiving
+        if bool(RecordFilePath) is True:
+            AddressBooking(RecordFilePath,AddressLogging)
+            return(RecordFilePath,AddressLogging)
+        # Ignore logging
+        elif bool(RecordFilePath) is False:
+            return(AddressLogging)
+    # Receiving MAC address, Using whitelist
+    elif type(AddressInput) is str and bool(WhitelistPath) is True:
+        # Check MAC address by filter
+        FilterCheck = AddressFilter(WhitelistPath,AddressInput)
+        # MAC Address match whitelist
+        if type(FilterCheck) is str:
+            # Translate address into WoL packet
+            PacketPayload = Address2Packet(FilterCheck)
+            # Broadcasting
+            LocalBroadcasting(PacketPayload,SelectAddress,SelectProtocolNumber)
+            # Logging receiving MAC address
+            if bool(RecordFilePath) is True:
+                AddressBooking(RecordFilePath,AddressInput)
+                return(RecordFilePath,WhitelistPath,AddressInput)
+            # Ignore logging
+            elif bool(RecordFilePath) is False:
+                return(WhitelistPath,AddressInput)
+        # Didn't match whitelits, Ignore
+        elif type(FilterCheck) is int:
+            return False
+    # Receiving MAC address, broadcasting without whitelist check
+    elif type(AddressInput) is str and bool(WhitelistPath) is False:
+        # Translate address into WoL packet
+        PacketPayload = Address2Packet(AddressInput)
+        # Broadcasting
+        LocalBroadcasting(PacketPayload,SelectAddress,SelectProtocolNumber)
+        # Logging receiving MAC address
+        if bool(RecordFilePath) is True:
+            AddressBooking(RecordFilePath,AddressInput)
+            return(RecordFilePath,AddressInput)
+        # Ignore logging
+        elif bool(RecordFilePath) is False:
+            return (AddressInput)
+
+# 2024.03.24

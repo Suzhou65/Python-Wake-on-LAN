@@ -6,7 +6,7 @@ import tkinter
 # GUI mode switch
 EnableGUI = False
 # Default MAC address
-DefaultAddress = "00:11:AF:D6:A5:E2"
+DefaultAddress = ""
 
 # Exit button definite
 def GUIEnding(): 
@@ -29,7 +29,7 @@ def GUIAction():
         pass
     # Translate and check
     PayloadString = wakeonlan.Address2Packet(GUIMacAddress)
-    # Print error massage if format incorrect
+    # If format incorrect
     if type(PayloadString) is bool:
         del GUIMacAddress
         pass
@@ -51,8 +51,10 @@ def CLIAction(DefaultAddress):
         MacAddress = TypingMacAddress
     # Check MAC addrrss
     AddressTranslate = wakeonlan.Address2Packet(MacAddress)
+    # Incorrect MAC address input
     if type(AddressTranslate) is bool:
         return 401
+    # Check pass
     else:
         pass
     # Input IP address
@@ -67,6 +69,7 @@ def CLIAction(DefaultAddress):
 
 # Runtime
 try:
+    # CLI mode
     if EnableGUI is False:
         CheckResult = CLIAction(DefaultAddress)
         if type(CheckResult) is int:
@@ -76,6 +79,7 @@ try:
             SuccessTime = wakeonlan.GetTime()
             print(f"{SuccessTime} | Magic packet broadcast successfully.\r\n")
             sys.exit(0)
+    # GUI, Tkinter mode
     elif EnableGUI is True:
         # Tkinter main windows configuration
         WindowUI = tkinter.Tk()
@@ -83,36 +87,37 @@ try:
         WindowUI.minsize(330,320)
         WindowUI.maxsize(330,320)
         WindowUI.grid_columnconfigure(0,weight=1)
-        # Render, definite top description
+        # Top description
         Label = tkinter.Label(WindowUI,text=f"Enter MAC address, default is {DefaultAddress}")
         Label.grid(row=0,ipadx=5,pady=5)
-        # Definite Mac address input entry
+        # Mac address input entry
         TextMAC = tkinter.Entry(WindowUI,justify="center")
         TextMAC.grid(row=1,ipadx=5,pady=5)
-        # Definite top description
+        # Top description
         Label = tkinter.Label(WindowUI,text="Enter IP address, default is Broadcast")
         Label.grid(row=2,ipadx=5,pady=5)
-        # Definite IP address input entry, Default is broadcast mode
+        # IP address input entry, Default is broadcast mode
         TextIP = tkinter.Entry(WindowUI,justify="center")
         TextIP.grid(row=3,ipadx=5,pady=5)
-        # Definite broadcasting port
+        # Broadcasting port input entry
         Label = tkinter.Label(WindowUI,text="Enter broadcasting port, default is 9")
         Label.grid(row=4,ipadx=5,pady=5)
-        # Definite Mac address input entry
+        # Mac address input entry
         TextPort = tkinter.Entry(WindowUI,justify="center")
         TextPort.grid(row=5,ipadx=5,pady=5)
-        # Definite WOL command
+        # Command
         ButtonWake = tkinter.Button(WindowUI,text="Wake",width=20,command=GUIAction)
         ButtonWake.grid(row=7,ipadx=5,pady=5)
-        # Definite exit button
+        # Exit button
         ButtonExit = tkinter.Button(WindowUI,text="Exit",width=20,command=GUIEnding)
         ButtonExit.grid(row=8,ipadx=5,pady=5)
-        # Loop
+        # Loop Render
         WindowUI.mainloop()
-# Command Exit
+# Command quit
 except KeyboardInterrupt:
     print("Goodbye...\r\n")
     sys.exit(0)
+# Error
 except Exception:
     ErrorTime = wakeonlan.GetTime()
     print(f"{ErrorTime} | Error occurred.\r\n")

@@ -1,7 +1,7 @@
 # Python Running Wake-on-LAN
-[![wol](https://github.takahashi65.info/lib_badge/wake-on-lan.svg)](https://pypi.org/project/wakeonlan/) 
-[![python version](https://github.takahashi65.info/lib_badge/python-3.6.svg)](https://www.python.org/) 
-[![php](https://github.takahashi65.info/lib_badge/php-7.3.0.svg)](https://www.php.net/) 
+[![wol](https://github.takahashi65.info/lib_badge/wake-on-lan.svg)](https://pypi.org/project/wakeonlan/)
+[![python version](https://github.takahashi65.info/lib_badge/python-3.12.svg)](https://www.python.org/) 
+[![php](https://github.takahashi65.info/lib_badge/php-8.3.0.svg)](https://www.php.net/) 
 [![UA](https://github.takahashi65.info/lib_badge/active_maintenance.svg)](https://github.com/Suzhou65/Python-Wake-on-LAN)
 [![Size](https://img.shields.io/github/repo-size/Suzhou65/Python-Wake-on-LAN)](https://shields.io/category/size)
 
@@ -31,49 +31,47 @@ Using Python sending Magic Packet, or forwarding it.
 
 ## Usage
 ### Port Forwarding
-You need to setting router port forwarding function, set **Port 9 | UDP** forward to the device you running Magic Packet forwarding program. Port 9 is the defult port number sending and receiving Magic Packet, but sometimes you need to switch it due to some limited.
-
+You need to setting router port forwarding function, set **UDP, Port 9** forward to the device you running Magic Packet forwarding program. Port 9 is the defult port number sending and receiving Magic Packet, but sometimes you need to switch it due to some limited.
 ### Root Privileges
 TCP/UDP ports below 1024 are privileged, so bind socket below 1024 need root privileges. If you didn't using sudo command, you will see the alert message likes below.
-```text
-2020-08-13 17:21:57 | Ports below 1024 are privileged, require root privileges !
+```python
+# Ports below 1024 require root privileges
+except PermissionError:
+  ErrorMessage = ("Ports below 1024 are privileged, require root privilege.")
+  wakeonlan.StatusBooking(StatusPath,StatusLogging=ErrorMessage)
+  print(f"{ErrorMessage}\r\n")
+  sys.exit(0)
 ```
-If you dont't have root privileges, or cannot using sudo command, please switch the **receive_protocol** port over 1024. For example:
+If you dont't have root privileges, or cannot using sudo command, please switch the **HostProtocol** port over 1024. For example:
 ```python
 try:
-  # Get Host
-  receive_host = wakeonlan.host_info()
+  # Monitoring WoL, Get Host
+  HostMonitoring = wakeonlan.NetEnvkCheck()
   # Listening socket config
-  receive_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
-  receive_protocol = 9
-  receive_socket.bind((receive_host, receive_protocol))
-  # If ports below 1024 require root privileges
-except PermissionError:
-  print(f"{time_start} | Ports below 1024 are privileged, require root privileges !")
-  sys.exit(0)
+  HostSocket = socket.socket(socket.AF_INET,socket.SOCK_DGRAM,0)
+  HostProtocol = 7
+  HostSocket.bind((HostMonitoring,HostProtocol))
 ```
 ### Terminal multiplexer
 [GNU Screen](https://www.gnu.org/software/screen/) is recommended, it can let you running Magic Packet forwarding program at background.
-
 ### Port Forwarding Status Monitor
 Apache HTTP Server, and php 7.3 is necessary, after install, you need to enable php function at Apache.
 ```shell
-sudo apt install php
-sudo apt install libapache2-mod-php7.3
-sudo a2enmod php7.3
+sudo apt install php8.3 
+sudo apt install php8.3-fpm
+sudo a2enmod proxy_fcgi setenvif
+sudo a2dismod php8.3
+sudo a2enconf php8.3-fpm
 sudo systemctl restart apache2
 ```
-
-**wakeonlan_status.php** is a simple monitoring web page, **it didn't have any secure protection**. If you value you MAC address as personal privacy, please running it on LAN network environments only, or added some protection function, [see the example GitHub Gist](https://gist.github.com/Suzhou65/eed12200e516aac88b83f8ee6ec3dc7a).
 
 ## Import module
 - Import as module
 ```
 import wakeonlan
 ```
-
 ## Function
-### Wake-on-LAN CLI
+### Wake-on-LAN Script
 Command-line interface version.
 ```shell
 pi@raspberrypi:~/python_script $ python wakeonlan_script_cli.py
@@ -92,11 +90,6 @@ If set as broadcasting, it will printing:
 2020-08-13 17:23:05 | Magic Packet Broadcasting ...
 ```
 
-### Wake-on-LAN GUI
-Graphical User Interface version.
-```shell
-pi@raspberrypi:~/python_script $ python wakeonlan_script_gui.py
-```
 It will pop up a graphical user interface windows.
 
 ### Wake-on-LAN Forwarding
@@ -138,49 +131,18 @@ You can also setting ```Ignore wakeup all``` configuration, this configuration i
 ignroe_reveille = True
 ```
 
-### Wake-on-LAN Forwarding Nolog
-Forwarding Magic Packet and broadcasting.
-```shell
-pi@raspberrypi:~/python_script $ python wakeonlan_forwarding_nolog.py
-```
-Same function as previous python script, but this one won't generated any record file, it won't logging.
-
-You can also setting ```Ignore wakeup all``` configuration, this configuration is inside the forwarding script.
-```python
-# Ignore wakeup all
-ignroe_reveille = True
-```
-
-
-### Wake-on-LAN Status
-View Magic Packet Magic forwarding status on web browser.
-```php
-<!-- php block -->
-<?php
-  // File path as you python script location
-  if ($file = fopen("/python_script_location/wakeup_record.csv","r")){
-    while (($line = fgetcsv($file)) !== false){
-      echo "<tr>";
-      foreach ($line as $cell) {echo "<td>" . htmlspecialchars($cell) . "</td>";}
-      echo "</tr>\n";}
-      fclose($file);
-```
-File path depend on you python script location.
-
 ## Dependencies
 ### Python version
-- Python 3.6 or above
-
+- Python 3.9 or above
 ### Python module
 - sys
 - csv
 - datetime
 - socket
 - tkinter
-
 ### Apache HTTP Server
-- apache2, verson 2.4.46 or above
-- php 7.3 or above
+- Apache or NGINX
+- php 8.3 or above, recommend using php-FPM
 
 ## License
 General Public License -3.0

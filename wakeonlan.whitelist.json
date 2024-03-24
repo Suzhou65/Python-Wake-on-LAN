@@ -1,12 +1,13 @@
 {
   "AllowAddress": [
-    "AA:AA:AA:AA:AA:AA",
-    "BB:BB:BB:BB:BB:BB",
-    "CC:CC:CC:CC:CC:CC",
-    "DD:DD:DD:DD:DD:DD",
-    "EE:EE:EE:EE:EE:EE"
+    "FF:FF:FF:FF:FF:FF",
+    "",
+    "",
+    "",
+    ""
   ],
   "Comment":[
-    "USE CAPITAL CASE"
+    "USE CAPITAL CASE",
+    "IF YOU ALLOW WAKEUP ALL, ADD FF:FF:FF:FF:FF:FF INTO AllowAddress LIST"
   ] 
 }
