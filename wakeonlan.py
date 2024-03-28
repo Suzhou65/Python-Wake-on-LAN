@@ -16,83 +16,99 @@ def GetTime():
     return CurrentTime.strftime("%Y-%m-%d %H:%M:%S")
 
 # Check wakeup event and status record file
-def RecordFileInitialize(RecordFilePath=(),StatusFilePath=()):
-    if bool(RecordFilePath) is True:
+def RecordFileInitialize(RecordFile=None, StatusFile=None):
+    # Enable wakeup record
+    if RecordFile is not None:
         try:
-            CheckRecordFile = open(RecordFilePath,mode="r")
+            CheckRecordFile = open(RecordFile,mode="r")
             CheckRecordFile.close()
         except FileNotFoundError:
-            with open(RecordFilePath,mode="w",newline="") as RecordTapeInitialize:
+            # Create csv file
+            with open(RecordFile,mode="w",newline="") as RecordTapeInitialize:
                 RecordTape = csv.writer(RecordTapeInitialize, delimiter=",")
                 RecordTape.writerow(["Time","Address"])
                 RecordTapeInitialize.close()
-    elif bool(RecordFilePath) is False:
+    # Disable wakeup record
+    elif StatusFile is None:
         pass
-    if bool(StatusFilePath) is True:
+    # Enable status logging
+    if StatusFile is not None:
         try:
-            CheckStatusFile = open(StatusFilePath,mode="r")
+            CheckStatusFile = open(StatusFile,mode="r")
             CheckStatusFile.close()
         except FileNotFoundError:
-            with open(StatusFilePath,mode="w",newline="") as StatusTapeInitialize:
+            # Create csv file
+            with open(StatusFile,mode="w",newline="") as StatusTapeInitialize:
                 StatusTape = csv.writer(StatusTapeInitialize,delimiter=",")
                 CreateStatusTapeTime = GetTime()
-                StatusTape.writerow([CreateStatusTapeTime,"Initialization complete"])
+                StatusTape.writerow([CreateStatusTapeTime,"Initialization Complete"])
                 StatusTapeInitialize.close()
-    elif bool(StatusFilePath) is False:
+    # Disable status logging
+    elif bool(StatusFile) is False:
         pass
 
 # Check whitelist file
-def WhitelistInitialize(WhitelistPath):
-    try:
-        with open(WhitelistPath,"r") as WhitelistCheck:
+def WhitelistInitialize(Whitelist=None):
+    # Enable whitelist, check JSON file
+    if Whitelist is not None:
+        try:
+            with open(Whitelist,"r") as WhitelistCheck:
                 WhitelistCheck.close()
-    except FileNotFoundError:
-        # Dictionary
-        WhitelistDict = {
-            "AllowAddress":[
-                "",
-                "",
-                "",
-                "",
-                ""],
-            "Comment":[
-                "USE CAPITAL CASE",
-                "IF YOU ALLOW WAKEUP ALL, ADD FF:FF:FF:FF:FF:FF INTO AllowAddress LIST"]
-                }
-        # Save
-        with open(WhitelistPath,"w") as WhitelistCreate:
-            json.dump(WhitelistDict,WhitelistCreate,indent=2)
-            WhitelistCreate.close()
+        # File not found
+        except FileNotFoundError:
+            # Create dictionary
+            WhitelistDict = {"AllowAddress":[
+                    "",
+                    ""],
+                "Comment":[
+                    "USE CAPITAL CASE",
+                    "IF YOU ALLOW WAKEUP ALL, ADD FF:FF:FF:FF:FF:FF INTO AllowAddress LIST"]}
+            # Create JSON file
+            with open(Whitelist,"w") as WhitelistCreate:
+                json.dump(WhitelistDict,WhitelistCreate,indent=2)
+                WhitelistCreate.close()
+    # Disable whitelist functon
+    elif Whitelist is None:
+        pass
 
 # Typing MAC address accepted
-def AddressBooking(RecordFilePath,AddressLogging):
-    try:
-        AddressBookingTime = GetTime()
-        AddressBookingRow = [AddressBookingTime,AddressLogging]
-        # Writing to MAC address record
-        with open(RecordFilePath,mode="a",newline="") as AddressBook:
-            AddressTape = csv.writer(AddressBook,delimiter=",")
-            AddressTape.writerow(AddressBookingRow)
-            AddressBook.flush()
-            AddressBook.close()
-        return AddressBookingRow
-    except Exception as BookingError:
-        logging.exception(BookingError)
+def WakeupBooking(RecordFile=None, AddressLogging=()):
+    # Enable wakeup record
+    if RecordFile is not None:
+        try:
+            AddressBookingTime = GetTime()
+            AddressBookingRow = [AddressBookingTime,AddressLogging]
+            # Writing to MAC address record
+            with open(RecordFile,mode="a",newline="") as AddressBook:
+                AddressTape = csv.writer(AddressBook,delimiter=",")
+                AddressTape.writerow(AddressBookingRow)
+                AddressBook.flush()
+                AddressBook.close()
+        except Exception as BookingError:
+            logging.exception(BookingError)
+            pass
+    # Disable booking
+    elif RecordFile is None:
         pass
 
 # Program executive logging
-def StatusBooking(StatusFilePath,StatusLogging=()):
-    try:
-        StatusBookingTime = GetTime()
-        StatusBookingRow = [StatusBookingTime,StatusLogging]
-        # Writing status record
-        with open(StatusFilePath,mode="w",newline="") as StatusBook:
-            StatusTape = csv.writer(StatusBook, delimiter=",")
-            StatusTape.writerow(StatusBookingRow)
-            StatusBook.close()
-            return StatusBookingRow
-    except Exception as BookingError:
-        logging.exception(BookingError)
+def StatusBooking(StatusFile=None, StatusLogging=()):
+    # Enable status booking
+    if StatusFile is not None:
+        try:
+            StatusBookingTime = GetTime()
+            StatusBookingRow = [StatusBookingTime,StatusLogging]
+            # Writing status record
+            with open(StatusFile,mode="w",newline="") as StatusBook:
+                StatusTape = csv.writer(StatusBook, delimiter=",")
+                StatusTape.writerow(StatusBookingRow)
+                StatusBook.flush()
+                StatusBook.close()
+        except Exception as BookingError:
+            logging.exception(BookingError)
+            pass
+    # Disable status booking
+    elif StatusFile is None:
         pass
 
 # Check LAN environment
@@ -108,7 +124,7 @@ def NetEnvkCheck():
         return socket.gethostbyname(AskHostName)
 
 # Convert MAC address to bytes
-def Address2Packet(MacAddress):
+def AddressTranslatedintoBytes(MacAddress):
     try:
         # With separate character
         if len(MacAddress) == 17:
@@ -124,13 +140,13 @@ def Address2Packet(MacAddress):
             return BytesMacAddress
         # If format incorrect
         else:
-            return False
+            return 101
     except Exception as ConvertError:
         logging.exception(ConvertError)
-        return False
+        return 102
 
 # Convert bytes to MAC address
-def Packet2Address(PacketInput):
+def BytesTranslatedintoAddress(PacketInput):
     try:
         # Convert Hexadecimal
         DecodePacket = PacketInput.hex()
@@ -150,98 +166,89 @@ def Packet2Address(PacketInput):
     #If data doesn't look like MAC address
     except Exception as ConvertError:
         logging.exception(ConvertError)
-        return False
+        return 201
 
 # Check WakeonLAN address if needed
-def AddressFilter(WhitelistPath,RandomMacAddress):
-    try:
-        # Upper to capital case
-        RandomMacAddress = RandomMacAddress.upper()
-        # Read JSON storage whitelist
-        with open(WhitelistPath,"r") as CheckReference:
-            CheckBook = json.load(CheckReference)
-            # Get list
-            for ReferenceAddress in CheckBook["AllowAddress"]:
-                # Inside whitelist
-                if RandomMacAddress == ReferenceAddress.upper():
-                    return RandomMacAddress
-                # Otherwise
-                elif RandomMacAddress != ReferenceAddress.upper():
-                    return 401
-    # Whitelist JSON not found
-    except FileNotFoundError:
+def AddressFilter(RandomMacAddress, Whitelist=None):
+    if Whitelist is not None:
+        try:
+            # Upper to capital case
+            RandomMacAddress = RandomMacAddress.upper()
+            # Read JSON storage whitelist
+            with open(Whitelist,"r") as CheckReference:
+                CheckBook = json.load(CheckReference)
+                # Get list
+                for ReferenceAddress in CheckBook["AllowAddress"]:
+                    # Inside whitelist
+                    if RandomMacAddress == ReferenceAddress.upper():
+                        CheckReference.close()
+                        return RandomMacAddress
+                    # Otherwise
+                    elif RandomMacAddress != ReferenceAddress.upper():
+                        CheckReference.close()
+                        return 301
+        # Whitelist JSON not found
+        except FileNotFoundError:
+            return RandomMacAddress
+        # Error occurred
+        except Exception as FilterError:
+            logging.exception(FilterError)
+            return 302
+    # Disable Whitelist check
+    elif Whitelist is None:
         return RandomMacAddress
-    except Exception as FilterError:
-        logging.exception(FilterError)
-        return False
 
 # Sending WakeonLAN packet
-def LocalBroadcasting(PacketPayload,SelectAddress=(),SelectProtocolNumber=()):
-    try:
-        # IP address config
-        if bool(SelectAddress) is False:
-            SelectAddress = "255.255.255.255"
-        elif bool(SelectAddress) is True:
-            pass
-        # Port config
-        if bool(SelectProtocolNumber) is False:
-            SelectProtocolNumber = 9
-        elif bool(SelectProtocolNumber) is True:
-            pass
-        # Broadcast socket config
-        BroadcastMission = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        BroadcastMission.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST,1)
-        BroadcastMission.sendto(PacketPayload,(SelectAddress,SelectProtocolNumber))
-        BroadcastMission.close()
-        return PacketPayload
-    except Exception as BroadcastingError:
-        logging.exception(BroadcastingError)
-        return False
+def LocalBroadcasting(WakeupMacAddress, AddressConfig=None, PortConfig=None):
+    # Translate MAC address into WoL bytes packet
+    WakeUpPacket = AddressTranslatedintoBytes(WakeupMacAddress)
+    # Error occurred during translate
+    if type(WakeUpPacket) is int:
+        return WakeUpPacket
+    # Successfully translate into bytes packet
+    elif type(WakeUpPacket) is bytes:
+        try:
+            # IP address config, default
+            if AddressConfig is None:
+                BroadcastAddress = "255.255.255.255"
+            elif AddressConfig is not None:
+                BroadcastAddress = AddressConfig
+            # Port config, default
+            if PortConfig is None:
+                BroadcastPort = 9
+            elif PortConfig is not None:
+                BroadcastPort = PortConfig
+            # Broadcast socket config
+            BroadcastMission = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+            BroadcastMission.setsockopt(socket.SOL_SOCKET,socket.SO_BROADCAST,1)
+            BroadcastMission.sendto(WakeUpPacket,(BroadcastAddress,BroadcastPort))
+            BroadcastMission.close()
+            return WakeupMacAddress
+        except Exception as BroadcastingError:
+            logging.exception(BroadcastingError)
+            return 401
 
 # Forwarding MAC address
-def SocketForwarding(AddressInput,WhitelistPath=(),RecordFilePath=(),SelectAddress=(),SelectProtocolNumber=()):
+def SocketForwarding(ForwardingPayload, ForwardingCheck=None, ForwardingRecord=None, ForwardingAddress=None, ForwardingPort=None):
     # Receiving incorrect data
-    if type(AddressInput) is bool:
-        AddressLogging=("Omit incorrect data")
+    if type(ForwardingPayload) is int:
         # Logging incorrect data receiving
-        if bool(RecordFilePath) is True:
-            AddressBooking(RecordFilePath,AddressLogging)
-            return(RecordFilePath,AddressLogging)
-        # Ignore logging
-        elif bool(RecordFilePath) is False:
-            return(AddressLogging)
-    # Receiving MAC address, Using whitelist
-    elif type(AddressInput) is str and bool(WhitelistPath) is True:
-        # Check MAC address by filter
-        FilterCheck = AddressFilter(WhitelistPath,AddressInput)
-        # MAC Address match whitelist
+        WakeupBooking(RecordFile=ForwardingRecord, AddressLogging=("Omit incorrect data."))
+        return int
+    # Receiving MAC address
+    elif type(ForwardingPayload) is str:
+        # Using whitelist
+        FilterCheck = AddressFilter(ForwardingPayload, Whitelist=ForwardingCheck)
+        # MAC Address match whitelist, or Disable whitelist check
         if type(FilterCheck) is str:
-            # Translate address into WoL packet
-            PacketPayload = Address2Packet(FilterCheck)
-            # Broadcasting
-            LocalBroadcasting(PacketPayload,SelectAddress,SelectProtocolNumber)
+            LocalBroadcasting(FilterCheck, AddressConfig=ForwardingAddress, PortConfig=ForwardingPort)
             # Logging receiving MAC address
-            if bool(RecordFilePath) is True:
-                AddressBooking(RecordFilePath,AddressInput)
-                return(RecordFilePath,WhitelistPath,AddressInput)
-            # Ignore logging
-            elif bool(RecordFilePath) is False:
-                return(WhitelistPath,AddressInput)
+            WakeupBooking(RecordFile=ForwardingRecord, AddressLogging=FilterCheck)
+            return True
         # Didn't match whitelits, Ignore
         elif type(FilterCheck) is int:
+            # Logging unmatch MAC address event
+            WakeupBooking(RecordFile=ForwardingRecord, AddressLogging=("Omit unmatch MAC address."))
             return False
-    # Receiving MAC address, broadcasting without whitelist check
-    elif type(AddressInput) is str and bool(WhitelistPath) is False:
-        # Translate address into WoL packet
-        PacketPayload = Address2Packet(AddressInput)
-        # Broadcasting
-        LocalBroadcasting(PacketPayload,SelectAddress,SelectProtocolNumber)
-        # Logging receiving MAC address
-        if bool(RecordFilePath) is True:
-            AddressBooking(RecordFilePath,AddressInput)
-            return(RecordFilePath,AddressInput)
-        # Ignore logging
-        elif bool(RecordFilePath) is False:
-            return (AddressInput)
 
-# 2024.03.24
+# 2024.03.25
