@@ -9,9 +9,9 @@ FilterPath = "/file_path/wakeonlan.whitelist.json"
 RecordPath = "/file_path/wakeonlan.mac_address.csv"
 # Program status file and path
 StatusPath = "/file_path/wakeonlan.forward_status.csv"
-# Forwarding target, Default(None) is 255.255.255.255
+# Forwarding target, Default is 255.255.255.255
 Address = None
-# Forwarding output port number, Default(None) is port 9
+# Forwarding output port number, Default is port 9
 Port = None
 
 # Runtime
@@ -61,4 +61,4 @@ except Exception:
     print(f"{ErrorMessage}\r\n")
     sys.exit(0)
 
-# 2024.03.27
+# 2024.03.28

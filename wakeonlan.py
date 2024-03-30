@@ -233,7 +233,7 @@ def SocketForwarding(ForwardingPayload, ForwardingCheck=None, ForwardingRecord=N
     # Receiving incorrect data
     if type(ForwardingPayload) is int:
         # Logging incorrect data receiving
-        WakeupBooking(RecordFile=ForwardingRecord, AddressLogging=("Omit incorrect data."))
+        WakeupBooking(RecordFile=ForwardingRecord, AddressLogging=("OMIT"))
         return int
     # Receiving MAC address
     elif type(ForwardingPayload) is str:
@@ -248,7 +248,7 @@ def SocketForwarding(ForwardingPayload, ForwardingCheck=None, ForwardingRecord=N
         # Didn't match whitelits, Ignore
         elif type(FilterCheck) is int:
             # Logging unmatch MAC address event
-            WakeupBooking(RecordFile=ForwardingRecord, AddressLogging=("Omit unmatch MAC address."))
+            WakeupBooking(RecordFile=ForwardingRecord, AddressLogging=("UNMATCH"))
             return False
 
-# 2024.03.25
+# 2024.03.28

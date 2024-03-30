@@ -29,7 +29,7 @@ Using Python sending Magic Packet, or forwarding it.
 
 ## Usage
 ### Port Forwarding
-You need to setting router port forwarding function, set **UDP, Port 9** forward to the device you running Magic Packet forwarding program. Port 9 is the defult port number sending and receiving Magic Packet, but sometimes you need to switch it due to some limited.
+You need to setting router port forwarding function, set **UDP 9** forward to the device you running Magic Packet forwarding program. Port number 9 is the defult port number sending and receiving Magic Packet, but sometimes you need to switch it due to some limited.
 ### Root Privileges
 TCP/UDP ports below 1024 are privileged, so bind socket below 1024 need root privileges. If you didn't using sudo command, you will see the alert message likes below.
 ```python
@@ -69,14 +69,22 @@ import wakeonlan
 
 ## Function
 ### Wake-on-LAN Script
-Switch between CLI mode or GUI mode.
+Sending Magic Packet.
+```shell
+root@host:~/script_local $ sudo python wakeonlan_script.py
+```
+Switch between CLI mode and GUI mode. Set ```True``` It will pop up a graphical user interface windows.
 ```python
 # GUI mode switch
 EnableGUI = False
 ```
-Set ```True``` It will pop up a graphical user interface windows.
+Configure default MAC address.
+```python
+# Default MAC address
+DefaultAddress = "FF:FF:FF:FF:FF:FF"
+```
 ### Wake-on-LAN Forwarding
-Forwarding Magic Packet and broadcasting.
+Forwarding Magic Packet and broadcasting to local network environment.
 ```shell
 root@host:~/script_local $ sudo python wakeonlan_forwarding.py
 ```
@@ -89,15 +97,23 @@ Pressing Ctrl+C to exit.
 ```
 Now it will monitoring the network, and forwarding Magic Packet by broadcasting, it also record the receiving data.
 
-If you want to terminate the Program, pressing CTRL+C, it will print this:
+If you want to terminate the Program, pressing CTRL+C, it will print:
 ```
 Script has been manually stopped.
 ```
-The receiving Magic Packet will be translate into MAC address, recording as CSV file with receiving time. The file also recording program start / terminate time, and error occurred time when receiving incomplete packet.
-
-You can also setting ```MAC addrsss whitelist``` configuration, this configuration is inside the script.
+The receiving Magic packet will be translate into MAC address, recording as CSV file named ```wakeonlan.mac_address.csv``` with receiving time. To disable receiving record, please setting ```RecordPath``` into ```None```.
 ```python
-# Whitelist path, To disable function, set into None
+# MAC address input recoed
+RecordPath = "/file_path/wakeonlan.mac_address.csv"
+```
+Same as script's process status.
+```python
+# Program status file and path
+StatusPath = "/file_path/wakeonlan.forward_status.csv"
+```
+You can also configure ```MAC addrsss whitelist``` inside script.
+```python
+# Whitelist path
 FilterPath = "/file_path/wakeonlan.whitelist.json"
 ```
 Please editing the whitelist file named ```wakeonlan.whitelist.json```.
@@ -110,20 +126,23 @@ Please editing the whitelist file named ```wakeonlan.whitelist.json```.
     ],
   "Comment":[
     "USE CAPITAL CASE",
-    "IF YOU ALLOW WAKEUP ALL, ADD FF:FF:FF:FF:FF:FF INTO AllowAddress LIST"
+    "IF YOU ALLOW WAKEUP ALL, ADDING FF:FF:FF:FF:FF:FF INTO AllowAddress LIST"
     ]
 }
 ```
 ### Forwarding Status
 
 ## Dependencies
+### Operating system
+- Linux distro. For example: Debian, Ubuntu, Fedora
 ### Python version
-- Python 3.9 or above
+- Python 3.9.6 or above
 ### Python module
 - csv
 - sys
 - json
 - socket
+- tkinter
 - logging
 - datetime
 ### Apache HTTP Server

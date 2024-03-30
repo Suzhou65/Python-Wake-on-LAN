@@ -1,5 +1,5 @@
 {
-  "AllowAddress": [
+  "AllowAddress":[
     "FF:FF:FF:FF:FF:FF",
     "",
     "",
@@ -8,6 +8,6 @@
   ],
   "Comment":[
     "USE CAPITAL CASE",
-    "IF YOU ALLOW WAKEUP ALL, ADD FF:FF:FF:FF:FF:FF INTO AllowAddress LIST"
+    "IF YOU ALLOW WAKEUP ALL, ADDING FF:FF:FF:FF:FF:FF INTO AllowAddress LIST"
   ] 
 }
