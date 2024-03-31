@@ -155,7 +155,7 @@ def BytesTranslatedintoAddress(PacketInput):
             for i in range(0, len(DecodePacket),12)]
         # Get payload
         MacAddressString = Decode2List[1]
-        # 
+        # Separate packet header and MAC address
         StringLength, StringSpliter = len(MacAddressString),len(MacAddressString)/6
         StringSpliter = int(StringSpliter)
         AddressOutput = [MacAddressString [i:i+StringSpliter]
@@ -217,7 +217,7 @@ def LocalBroadcasting(WakeupMacAddress, AddressConfig=None, PortConfig=None):
             if PortConfig is None:
                 BroadcastPort = 9
             elif PortConfig is not None:
-                BroadcastPort = PortConfig
+                BroadcastPort = int(PortConfig)
             # Broadcast socket config
             BroadcastMission = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
             BroadcastMission.setsockopt(socket.SOL_SOCKET,socket.SO_BROADCAST,1)

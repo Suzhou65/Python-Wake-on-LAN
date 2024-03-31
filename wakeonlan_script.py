@@ -16,79 +16,75 @@ def GUIEnding():
 # WoL, GUI mode
 def GUIAction():
     # Get MAC address
-    GUIMacAddress = TextMAC.get()
+    InputMacAddress = TextMAC.get()
     # Get IP address
-    GUIBroadcastAddress = TextIP.get()
+    BroadcastAddress = TextIP.get()
     # Get port
-    GUIPort = TextPort.get()
+    BroadcastPort = TextPort.get()
     # Using default MAC adress
-    if len(GUIMacAddress) == 0:
-        GUIMacAddress = DefaultAddress
+    if str(InputMacAddress) == "":
+        InputMacAddress = DefaultAddress
     else:
         pass
     # Using default IP adress
-    if len(GUIBroadcastAddress) == 0:
-        GUIBroadcastAddress = None
-    else:
-        pass
-    # Using default port
-    if len(GUIPort) == 0:
-        GUIPort = None
-    else:
-        pass
-    # Translate and check
-    PayloadString = wakeonlan.AddressTranslatedintoBytes(GUIMacAddress)
-    # If format incorrect
-    if type(PayloadString) is int:
-        del GUIMacAddress
-    # If format correct
-    elif type(PayloadString) is bytes:
-        wakeonlan.LocalBroadcasting(WakeupMacAddress=GUIMacAddress, AddressConfig=GUIBroadcastAddress, PortConfig=GUIPort)
-        del GUIMacAddress, GUIBroadcastAddress, GUIPort
-
-# WoL, CLI mode
-def CLIAction(DefaultAddress):
-    # Print start message
-    StartTime = wakeonlan.GetTime()
-    print(f"{StartTime} | Python wakeonlan\r\n")
-    # MAC address
-    TypingMacAddress = input(f"Enter MAC address, default is {DefaultAddress}: ")
-    if TypingMacAddress == 0:
-        CLIMacAddress = DefaultAddress
-    else:
-        CLIMacAddress = TypingMacAddress
-    # Check MAC addrrss
-    AddressTranslate = wakeonlan.AddressTranslatedintoBytes(CLIMacAddress)
-    # Incorrect MAC address input
-    if type(AddressTranslate) is int:
-        return 401
-    # Check pass
-    elif type(AddressTranslate) is bytes:
-        pass
-    # Input IP address
-    BroadcastAddress = input("Enter IP address, default is Broadcast: ")
-    if len() == 0:
+    if str(BroadcastAddress) == "":
         BroadcastAddress = None
     else:
         pass
-    # Input port config
-    BroadcastPort = input("Enter Port number, default is port 9: ")
-    if len(BroadcastPort) == 0:
+    # Using default port
+    if str(BroadcastPort) == "":
         BroadcastPort = None
     else:
         pass
+    # Translate and check
+    PayloadString = wakeonlan.AddressTranslatedintoBytes(InputMacAddress)
+    # If format incorrect
+    if type(PayloadString) is int:
+        del InputMacAddress
+    # If format correct
+    elif type(PayloadString) is bytes:
+        wakeonlan.LocalBroadcasting(InputMacAddress,AddressConfig=BroadcastAddress,PortConfig=BroadcastPort)
+        del InputMacAddress,BroadcastAddress,BroadcastPort
+
+# WoL, CLI mode
+def WakeupScript(DefaultAddress):
+    # MAC address
+    InputMacAddress = input(f"Enter MAC address, default is {DefaultAddress} : ")
+    # Default MAC address
+    if str(InputMacAddress) == "":
+        InputMacAddress = DefaultAddress
+    else:
+        pass
+    # Check MAC addrrss
+    AddressCheck = wakeonlan.AddressTranslatedintoBytes(InputMacAddress)
+    # Incorrect MAC address input
+    if type(AddressCheck) is int:
+        return 401
+    # Check pass
+    elif type(AddressCheck) is bytes:
+        # Input IP address
+        BroadcastAddress = input("Enter IP address, default is Broadcast: ")
+        if str(BroadcastAddress) == "":
+            BroadcastAddress = None
+        else:
+            pass
+        # Input port config
+        BroadcastPort = input("Enter Port number, default is port 9: ")
+        if str(BroadcastPort) == "":
+            BroadcastPort = None
+        else:
+            pass
     # Broadcasting magic packet
-    StartWakeUp = wakeonlan.GetTime()
-    print(f"{StartWakeUp} | Magic Packet Broadcasting...")
-    wakeonlan.LocalBroadcasting(CLIMacAddress, AddressConfig=BroadcastAddress, PortConfig=BroadcastPort)
+        print("Magic Packet Broadcasting...")
+        return wakeonlan.LocalBroadcasting(InputMacAddress,AddressConfig=BroadcastAddress,PortConfig=BroadcastPort)
 
 # Runtime
 try:
     # CLI mode
     if EnableGUI is False:
-        CheckResult = CLIAction(DefaultAddress)
+        CheckResult = WakeupScript(DefaultAddress)
         if type(CheckResult) is int:
-            print("MAC Address format incorrect, please retry.\r\n")
+            print("Error occurred, please retry.\r\n")
             sys.exit(0)
         else:
             SuccessTime = wakeonlan.GetTime()
@@ -122,10 +118,10 @@ try:
         TextPort.grid(row=5,ipadx=5,pady=5)
         # Command
         ButtonWake = tkinter.Button(WindowUI,text="Wake",width=20,command=GUIAction)
-        ButtonWake.grid(row=7,ipadx=5,pady=5)
+        ButtonWake.grid(row=8,ipadx=5,pady=5)
         # Exit button
         ButtonExit = tkinter.Button(WindowUI,text="Exit",width=20,command=GUIEnding)
-        ButtonExit.grid(row=8,ipadx=5,pady=5)
+        ButtonExit.grid(row=9,ipadx=5,pady=5)
         # Loop Render
         WindowUI.mainloop()
 # Command quit
