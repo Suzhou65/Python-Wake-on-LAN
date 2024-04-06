@@ -55,10 +55,10 @@ except PermissionError:
     print(f"{PermissionMessage}\r\n")
     sys.exit(0)
 # Something wrong
-except Exception:
+except Exception as ErrorHandling:
     ErrorMessage = ("Script has stopped working due to error.")
     wakeonlan.StatusBooking(StatusFile=StatusPath,StatusLogging=ErrorMessage)
-    print(f"{ErrorMessage}\r\n")
+    print(f"{ErrorMessage} Error handling output:\r\n{ErrorHandling}\r\n")
     sys.exit(0)
 
-# 2024.03.28
+# 2024.04.06

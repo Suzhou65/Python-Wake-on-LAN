@@ -54,11 +54,11 @@ HostProtocol = 7
 ListeningSocket.bind((HostAddress,HostProtocol))
 ```
 ### Troubleshooting
-If forwarding script won't close normally, you may see the error message:
+If forwarding script wasn't stopped normally, you may see the error message at next start up:
 ```
 [Errno 98] Address already in use
 ```
-This cause by socket wasn't release. Please check the task manager:
+This error cause by forwarding script wasn't stopped, the socket used by script not release. Please check the task manager:
 ```shell
 ps -fA | grep python
 ```
