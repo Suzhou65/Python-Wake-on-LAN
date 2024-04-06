@@ -139,27 +139,26 @@ Please editing the whitelist file named ```wakeonlan.whitelist.json```.
 ```
 Setting ```FilterPath``` into ```None``` will disable whitelist function.
 ### Forwarding Status
-You may keep an eye on the forwarding script runtime by visiting the ```wakeonlan_status.php```, please deploy the php file as normal webpage.
-
-Status file locate configuration at ```wakeonlan_status.php``` line 87:
+Monitoring the forwarding script by ```wakeonlan_status.php```, please deploy the as normal webpage. Status file locate configuration at ```wakeonlan_status.php``` line 87:
 ```php
-if ($file = fopen("/file_path/wakeonlan.forward_status.csv","r")){  
+if ($file = fopen("/file_path/wakeonlan.forward_status.csv","r"))
 ```
-And line 106:
+MAC address forwarding record at line 106:
 ```php
-if ($file = fopen("/file_path/wakeonlan.mac_address.csv","r")){
+if ($file = fopen("/file_path/wakeonlan.mac_address.csv","r"))
 ```
 Password strong as hash, pleae using this script to generate hash.
 ```php
 <?php
   // Input raw password
   $password_input = "Input_Your_Password_Here";
+  // Using PASSWORD_DEFAULT for safety
   $hash = password_hash($password_input,PASSWORD_DEFAULT);
   // Print the generated hash
   echo $hash;
 ?>
 ```
-Copy and paste the hash at ```wakeonlan_status.php``` Line 77:
+Copy and paste the hash at ```wakeonlan_status.php``` line 77:
 ```php
 $hash = '$Put_Your_Hashed_Password_at_Here';
 ```

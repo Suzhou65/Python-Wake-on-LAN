@@ -82,7 +82,7 @@
                 if($verify){
                     // Authorization Succeeded
                     // Header
-                    echo "<h2>Forwarding System Status</h2>";
+                    echo "<h2>Forwarding System Status</h2>\n";
                     // Table
                     if ($file = fopen("/file_path/wakeonlan.forward_status.csv","r")){
                         // Table, Forwarding Record
@@ -90,7 +90,7 @@
                         while (($line = fgetcsv($file)) !== false){
                             // Thead 
                             echo "<tr>";
-                            foreach ($line as $cell) {echo"<td>".htmlspecialchars($cell)."</td>";}
+                            foreach ($line as $cell){echo"<td>".htmlspecialchars($cell)."</td>";}
                             echo "</tr>\n";}
                             fclose($file);
                         echo "</table>";
@@ -100,8 +100,8 @@
                             echo "<td>Unable to open database file.</td>";
                             echo "</tr></table>";}
                     // Header
-                    echo "<br>";
-                    echo "<h2>Forwarding Record</h2>";
+                    echo "<br>\n";
+                    echo "<h2>Forwarding Record</h2>\n";
                     // Table
                     if ($file = fopen("/file_path/wakeonlan.mac_address.csv","r")){
                         // Table, Forwarding Record
@@ -109,7 +109,7 @@
                         while (($line = fgetcsv($file)) !== false){
                             // Thead 
                             echo "<tr>";
-                            foreach ($line as $cell) {echo"<td>".htmlspecialchars($cell)."</td>";}
+                            foreach ($line as $cell){echo"<td>".htmlspecialchars($cell)."</td>";}
                             echo "</tr>\n";}
                             fclose($file);
                         echo "</table>";
