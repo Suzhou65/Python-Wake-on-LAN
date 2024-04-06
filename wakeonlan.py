@@ -170,33 +170,27 @@ def BytesTranslatedintoAddress(PacketInput):
 
 # Check WakeonLAN address if needed
 def AddressFilter(RandomMacAddress, Whitelist=None):
-    if Whitelist is not None:
+    # Disable Whitelist check
+    if Whitelist is None:
+        return RandomMacAddress.upper()
+    # Enable Whitelist check
+    elif Whitelist is not None:
+        # Read JSON storage whitelist
+        RandomMacAddress = RandomMacAddress.upper()
         try:
-            # Upper to capital case
-            RandomMacAddress = RandomMacAddress.upper()
-            # Read JSON storage whitelist
             with open(Whitelist,"r") as CheckReference:
                 CheckBook = json.load(CheckReference)
-                # Get list
-                for ReferenceAddress in CheckBook["AllowAddress"]:
-                    # Inside whitelist
-                    if RandomMacAddress == ReferenceAddress.upper():
-                        CheckReference.close()
-                        return RandomMacAddress
-                    # Otherwise
-                    elif RandomMacAddress != ReferenceAddress.upper():
-                        CheckReference.close()
-                        return 301
+                ReferenceAddressList = CheckBook["AllowAddress"]
+                CheckReference.close()
+                # Check from whitelist
+                if ReferenceAddressList.count(RandomMacAddress) != 0:
+                    return RandomMacAddress
+                # Otherwise
+                elif ReferenceAddressList.count(RandomMacAddress) == 0:
+                    return 301
         # Whitelist JSON not found
         except FileNotFoundError:
-            return RandomMacAddress
-        # Error occurred
-        except Exception as FilterError:
-            logging.exception(FilterError)
-            return 302
-    # Disable Whitelist check
-    elif Whitelist is None:
-        return RandomMacAddress
+            return RandomMacAddress.upper()
 
 # Sending WakeonLAN packet
 def LocalBroadcasting(WakeupMacAddress, AddressConfig=None, PortConfig=None):
@@ -234,7 +228,6 @@ def SocketForwarding(ForwardingPayload, ForwardingCheck=None, ForwardingRecord=N
     if type(ForwardingPayload) is int:
         # Logging incorrect data receiving
         WakeupBooking(RecordFile=ForwardingRecord, AddressLogging=("OMIT"))
-        return int
     # Receiving MAC address
     elif type(ForwardingPayload) is str:
         # Using whitelist
@@ -244,11 +237,9 @@ def SocketForwarding(ForwardingPayload, ForwardingCheck=None, ForwardingRecord=N
             LocalBroadcasting(FilterCheck, AddressConfig=ForwardingAddress, PortConfig=ForwardingPort)
             # Logging receiving MAC address
             WakeupBooking(RecordFile=ForwardingRecord, AddressLogging=FilterCheck)
-            return True
         # Didn't match whitelits, Ignore
         elif type(FilterCheck) is int:
             # Logging unmatch MAC address event
             WakeupBooking(RecordFile=ForwardingRecord, AddressLogging=("UNMATCH"))
-            return False
 
-# 2024.03.28
+# 2024.04.06

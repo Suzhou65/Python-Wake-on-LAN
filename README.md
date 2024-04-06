@@ -1,7 +1,7 @@
 # Python Running Wake-on-LAN
 [![wol](https://github.takahashi65.info/lib_badge/wake-on-lan.svg)](https://pypi.org/project/wakeonlan/)
-[![python version](https://github.takahashi65.info/lib_badge/python-3.9.svg)](https://www.python.org/) 
-[![php](https://github.takahashi65.info/lib_badge/php-8.3.0.svg)](https://www.php.net/) 
+[![python](https://github.takahashi65.info/lib_badge/python.svg)](https://www.python.org/) 
+[![php](https://github.takahashi65.info/lib_badge/php-7.3.0.svg)](https://www.php.net/) 
 [![UA](https://github.takahashi65.info/lib_badge/active_maintenance.svg)](https://github.com/Suzhou65/Python-Wake-on-LAN)
 [![Size](https://img.shields.io/github/repo-size/Suzhou65/Python-Wake-on-LAN)](https://shields.io/category/size)
 
@@ -13,6 +13,7 @@ Using Python sending Magic Packet, or forwarding it.
   * [Usage](#usage)
     + [Port Forwarding](#port-forwarding)
     + [Root Privileges](#root-privileges)
+    + [Troubleshooting](#troubleshooting)
     + [Terminal multiplexer](#terminal-multiplexer)
     + [Port Forwarding Status Monitor](#port-forwarding-status-monitor)
   * [Import module](#import-module)
@@ -30,16 +31,20 @@ Using Python sending Magic Packet, or forwarding it.
 ## Usage
 ### Port Forwarding
 You need to setting router port forwarding function, set **UDP 9** forward to the device you running Magic Packet forwarding program. Port number 9 is the defult port number sending and receiving Magic Packet, but sometimes you need to switch it due to some limited.
+
+Forwarding configuration can been found in script ``` wakeonlan_forwarding.py```.
+```python
+# Forwarding target, Default is 255.255.255.255
+Address = None
+# Forwarding output port number, Default is port 9
+Port = None
+```
 ### Root Privileges
 TCP/UDP ports below 1024 are privileged, so bind socket below 1024 need root privileges. If you didn't using sudo command, you will see the alert message likes below.
-```python
-# Ports below 1024 require root privileges
-except PermissionError:
-    PermissionMessage = ("Ports below 1024 are privileged, require root privilege.")
-    wakeonlan.StatusBooking(StatusFile=StatusPath,StatusLogging=PermissionMessage)
-    print(f"{PermissionMessage}\r\n")
 ```
-If you dont't have root privileges, or cannot using sudo command, please switch the **HostProtocol** port over 1024. For example:
+Ports below 1024 are privileged, require root privilege.
+```
+If you dont't have root privileges, or cannot using sudo command, please switch the **HostProtocol** port over 1024 inside script ```wakeonlan_forwarding.py```.
 ```python
 # Get host info
 HostAddress = wakeonlan.NetEnvkCheck()
@@ -48,18 +53,20 @@ ListeningSocket = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
 HostProtocol = 7
 ListeningSocket.bind((HostAddress,HostProtocol))
 ```
+### Troubleshooting
+If forwarding script won't close normally, you may see the error message:
+```
+[Errno 98] Address already in use
+```
+This cause by socket wasn't release. Please check the task manager:
+```shell
+ps -fA | grep python
+```
+Then kill the forwarding script still alive.
 ### Terminal multiplexer
 [GNU Screen](https://www.gnu.org/software/screen/) is recommended, it can let you running Magic Packet forwarding program at background.
 ### Port Forwarding Status Monitor
 Apache HTTP Server, and php 7.3 is necessary, after install, you need to enable php function at Apache.
-```shell
-sudo apt install php8.3 
-sudo apt install php8.3-fpm
-sudo a2enmod proxy_fcgi setenvif
-sudo a2dismod php8.3
-sudo a2enconf php8.3-fpm
-sudo systemctl restart apache2
-```
 
 ## Import module
 - Import as module
@@ -130,13 +137,41 @@ Please editing the whitelist file named ```wakeonlan.whitelist.json```.
     ]
 }
 ```
+Setting ```FilterPath``` into ```None``` will disable whitelist function.
 ### Forwarding Status
+You may keep an eye on the forwarding script runtime by visiting the ```wakeonlan_status.php```, please deploy the php file as normal webpage.
+
+Status file locate configuration at ```wakeonlan_status.php``` line 87:
+```php
+if ($file = fopen("/file_path/wakeonlan.forward_status.csv","r")){  
+```
+And line 106:
+```php
+if ($file = fopen("/file_path/wakeonlan.mac_address.csv","r")){
+```
+Password strong as hash, pleae using this script to generate hash.
+```php
+<?php
+  // Input raw password
+  $password_input = "Input_Your_Password_Here";
+  $hash = password_hash($password_input,PASSWORD_DEFAULT);
+  // Print the generated hash
+  echo $hash;
+?>
+```
+Copy and paste the hash at ```wakeonlan_status.php``` Line 77:
+```php
+$hash = '$Put_Your_Hashed_Password_at_Here';
+```
+You can see [demonstration](https://www.takahashi65.info/page/status_wakeonlan.php), password is ```OpenSourceisGreat```.
 
 ## Dependencies
 ### Operating system
-- Linux distro. For example: Debian, Ubuntu, Fedora
+- Linux distros.
+- For example: Debian, Ubuntu, Fedora, Raspberry Pi OS
 ### Python version
-- Python 3.9.6 or above
+- Python 3.7.3 or above
+- Testing on the above Python version: 3.9.6 / 3.12.2
 ### Python module
 - csv
 - sys
@@ -147,7 +182,7 @@ Please editing the whitelist file named ```wakeonlan.whitelist.json```.
 - datetime
 ### Apache HTTP Server
 - Apache or NGINX
-- php 8.3 or above, recommend using php-FPM
+- php 7.3 or above, recommend using php-FPM
 
 ## License
 General Public License -3.0
