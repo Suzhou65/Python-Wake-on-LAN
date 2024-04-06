@@ -42,23 +42,22 @@ try:
         # If not, keep listening
         else:
             continue
-# Exit
-except KeyboardInterrupt:
-    ExitMessage = ("Script has been manually stopped.")
-    wakeonlan.StatusBooking(StatusFile=StatusPath,StatusLogging=ExitMessage)
-    print(f"\r\n{ExitMessage}\r\n")
-    sys.exit(0)
 # Ports below 1024 require root privileges
 except PermissionError:
-    PermissionMessage = ("Ports below 1024 are privileged, require root privilege.")
-    wakeonlan.StatusBooking(StatusFile=StatusPath,StatusLogging=PermissionMessage)
-    print(f"{PermissionMessage}\r\n")
-    sys.exit(0)
+    Permission = ("Ports below 1024 are privileged, require root privilege.")
+    print(f"{Permission}\r\n")
+    sys.exit()
 # Something wrong
 except Exception as ErrorHandling:
-    ErrorMessage = ("Script has stopped working due to error.")
-    wakeonlan.StatusBooking(StatusFile=StatusPath,StatusLogging=ErrorMessage)
-    print(f"{ErrorMessage} Error handling output:\r\n{ErrorHandling}\r\n")
-    sys.exit(0)
+    Error = ("Script has stopped working due to error.")
+    wakeonlan.StatusBooking(StatusFile=StatusPath,StatusLogging=Error)
+    print(f"{Error} Error handling output:\r\n{ErrorHandling}\r\n")
+    sys.exit()
+# Exit
+except KeyboardInterrupt:
+    Exit = ("Script has been manually stopped.")
+    wakeonlan.StatusBooking(StatusFile=StatusPath,StatusLogging=Exit)
+    print(f"\r\n{Exit}\r\n")
+    sys.exit()
 
 # 2024.04.06
