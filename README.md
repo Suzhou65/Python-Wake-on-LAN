@@ -24,7 +24,7 @@ Using Python sending Magic Packet, or forwarding it.
   * [Dependencies](#dependencies)
     + [Python version](#python-version)
     + [Python module](#python-module)
-    + [Apache HTTP Server](#apache-http-server)
+    + [Web server](#web-server)
   * [License](#license)
   * [Resources](#resources)
 
@@ -32,7 +32,7 @@ Using Python sending Magic Packet, or forwarding it.
 ### Port Forwarding
 You need to setting router port forwarding function, set **UDP 9** forward to the device you running Magic Packet forwarding program. Port number 9 is the defult port number sending and receiving Magic Packet, but sometimes you need to switch it due to some limited.
 
-Forwarding configuration can been found in script ``` wakeonlan_forwarding.py```.
+Forwarding configuration can been found in script ```wakeonlan_forwarding.py```.
 ```python
 # Forwarding target, Default is 255.255.255.255
 Address = None
@@ -64,9 +64,9 @@ ps -fA | grep python
 ```
 Then kill the forwarding script still alive.
 ### Terminal multiplexer
-[GNU Screen](https://www.gnu.org/software/screen/) is recommended, it can let you running Magic Packet forwarding program at background.
+Recommend using [GNU Screen](https://www.gnu.org/software/screen/), it can let you running Magic Packet forwarding program at background.
 ### Port Forwarding Status Monitor
-Apache HTTP Server, and php 7.3 is necessary, after install, you need to enable php function at Apache.
+Apache or NGINX, and php are necessary.
 
 ## Import module
 - Import as module
@@ -147,7 +147,7 @@ MAC address forwarding record at line 106:
 ```php
 if ($file = fopen("/file_path/wakeonlan.mac_address.csv","r"))
 ```
-Password strong as hash, pleae using this script to generate hash.
+Password strong as hash, please using this script to generate hash.
 ```php
 <?php
   // Input raw password
@@ -162,7 +162,7 @@ Copy and paste the hash at ```wakeonlan_status.php``` line 77:
 ```php
 $hash = '$Put_Your_Hashed_Password_at_Here';
 ```
-You can see [demonstration](https://www.takahashi65.info/page/status_wakeonlan.php), password is ```OpenSourceisGreat```.
+You can access [demonstration](https://www.takahashi65.info/page/status_wakeonlan.php), password is ```OpenSourceisGreat```.
 
 ## Dependencies
 ### Operating system
@@ -179,7 +179,7 @@ You can see [demonstration](https://www.takahashi65.info/page/status_wakeonlan.p
 - tkinter
 - logging
 - datetime
-### Apache HTTP Server
+### Web server
 - Apache or NGINX
 - php 7.3 or above, recommend using php-FPM
 
